@@ -1,10 +1,10 @@
 import React from 'react';
 import ApolloClient from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
-
+import { onError } from 'apollo-link-error';
 import { WebSocketLink } from 'apollo-link-ws';
 import { HttpLink } from 'apollo-link-http';
-import { split } from 'apollo-link';
+import { ApolloLink, split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
@@ -34,7 +34,33 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const link = split(
+const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
+  if (graphQLErrors) {
+    for (let err of graphQLErrors) {
+      switch (err.extensions.code) {
+        case 'UNAUTHENTICATED':
+          // error code is set to UNAUTHENTICATED
+          // when AuthenticationError thrown in resolver
+
+          const oldHeaders = operation.getContext().headers;
+          operation.setContext({
+            headers: {
+              ...oldHeaders,
+              authorization: '',
+            },
+          });
+          return forward(operation);
+
+        default:
+      }
+    }
+  }
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
+
+const splitLink = split(
   ({ query }) => {
     const { kind, operation } = getMainDefinition(query);
     return kind === 'OperationDefinition' && operation === 'subscription';
@@ -43,6 +69,8 @@ const link = split(
   httpLink
 );
 
-const client = new ApolloClient({ link: authLink.concat(link), cache: new InMemoryCache() });
+const link = ApolloLink.from([authLink, errorLink, splitLink]);
+
+const client = new ApolloClient({ link, cache: new InMemoryCache() });
 
 export default ({ children }) => <ApolloProvider client={client}>{children}</ApolloProvider>;
