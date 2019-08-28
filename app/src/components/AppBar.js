@@ -9,11 +9,14 @@ import { useApolloClient } from 'react-apollo';
 // import MenuIcon from '@material-ui/icons/Menu';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
+import { AUTH_TOKEN } from '../constants';
+import { withRouter } from 'react-router-dom';
 
 const GET_ME = gql`
   {
     me {
       id
+      name
     }
   }
 `;
@@ -30,22 +33,42 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ButtonAppBar() {
+const AppHeader = props => {
   const classes = useStyles();
   const client = useApolloClient();
   const { loading, error, data } = useQuery(GET_ME);
 
-  console.log('client: ', client, data, error);
+  const isLoggedIn = !error && !loading && data.me && localStorage.getItem(AUTH_TOKEN);
+  const logout = () => {
+    localStorage.removeItem(AUTH_TOKEN);
+  };
+  const toLogin = () => {
+    props.history.push('/login');
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            News
-          </Typography>
-          <Button color="inherit">Logout</Button>
+          {isLoggedIn && (
+            <Typography variant="h6" className={classes.title}>
+              {data.me.name}
+            </Typography>
+          )}
+          {isLoggedIn && (
+            <Button color="inherit" onClick={logout}>
+              Logout
+            </Button>
+          )}
+          {!isLoggedIn && !loading && (
+            <Button color="inherit" onClick={toLogin}>
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>
   );
-}
+};
+
+export default withRouter(AppHeader);

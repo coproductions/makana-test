@@ -36,22 +36,20 @@ const authLink = setContext((_, { headers }) => {
 
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   if (graphQLErrors) {
+    console.log('graphqlerrors', graphQLErrors);
     for (let err of graphQLErrors) {
-      switch (err.extensions.code) {
-        case 'UNAUTHENTICATED':
-          // error code is set to UNAUTHENTICATED
-          // when AuthenticationError thrown in resolver
-
-          const oldHeaders = operation.getContext().headers;
-          operation.setContext({
-            headers: {
-              ...oldHeaders,
-              authorization: '',
-            },
-          });
-          return forward(operation);
-
-        default:
+      if ((err.message = 'Not authenticated')) {
+        // error code is set to UNAUTHENTICATED
+        // when AuthenticationError thrown in resolver
+        localStorage.removeItem(AUTH_TOKEN);
+        const oldHeaders = operation.getContext().headers;
+        operation.setContext({
+          headers: {
+            ...oldHeaders,
+            authorization: '',
+          },
+        });
+        return forward(operation);
       }
     }
   }
