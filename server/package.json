@@ -8,6 +8,7 @@
     "test": "mocha --bail --timeout 5000 test/*.test.js"
   },
   "dependencies": {
+    "@apollo/react-hooks": "^3.0.1",
     "bcryptjs": "2.4.3",
     "chai": "^4.2.0",
     "chai-subset": "^1.6.0",

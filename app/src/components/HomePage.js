@@ -8,7 +8,7 @@ import Notice from './Notice';
 
 const styles = theme => ({
   page: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
@@ -19,9 +19,7 @@ const enhanced = compose(withStyles(styles));
 
 export default enhanced(({ classes }) => (
   <div className={classes.page}>
-    <FeedSubscriptionData>
-      {props => <Notice {...props} />}
-    </FeedSubscriptionData>
+    <FeedSubscriptionData>{props => <Notice {...props} />}</FeedSubscriptionData>
 
     <FeedData>{props => <ListComments {...props} />}</FeedData>
   </div>

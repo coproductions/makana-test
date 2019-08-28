@@ -1,6 +1,7 @@
 import React from 'react';
 import ApolloClient from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
+
 import { WebSocketLink } from 'apollo-link-ws';
 import { HttpLink } from 'apollo-link-http';
 import { split } from 'apollo-link';
@@ -17,9 +18,7 @@ const wsLink = new WebSocketLink({
     reconnect: true
   }
 });
-const httpLink = new HttpLink({
-  uri: HTTP_URL
-});
+const httpLink = new HttpLink({ uri: HTTP_URL });
 
 const link = split(
   ({ query }) => {
@@ -30,11 +29,6 @@ const link = split(
   httpLink
 );
 
-const client = new ApolloClient({
-  link,
-  cache: new InMemoryCache()
-});
+const client = new ApolloClient({ link, cache: new InMemoryCache() });
 
-export default ({ children }) => (
-  <ApolloProvider client={client}>{children}</ApolloProvider>
-);
+export default ({ children }) => <ApolloProvider client={client}>{children}</ApolloProvider>;
