@@ -73,7 +73,7 @@ const AppHeader = props => {
             )}
             {!isLoggedIn && (
               <Button color="inherit" onClick={toLogin}>
-                Login
+                Sign in
               </Button>
             )}
           </Toolbar>

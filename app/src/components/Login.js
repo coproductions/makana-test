@@ -4,7 +4,7 @@ import { withSnackbar } from 'notistack';
 import { useMutation, useApolloClient } from 'react-apollo';
 import EmailPasswordForm from './EmailPasswordForm';
 import gql from 'graphql-tag';
-import { Redirect } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { AUTH_TOKEN } from '../constants';
 
 const LOGIN_USER = gql`
@@ -31,18 +31,9 @@ function Login(props) {
           isLoggedIn: true,
         },
       });
+      props.history.push('/');
     }
   }, [error, data]);
-
-  if (data && data.login && data.login.token) {
-    return (
-      <Redirect
-        to={{
-          pathname: '/',
-        }}
-      />
-    );
-  }
 
   return (
     <Container maxWidth="sm">
@@ -50,10 +41,11 @@ function Login(props) {
         values={values}
         setValues={setValues}
         onSubmit={() => login({ variables: values })}
-        submitLabel="Log in"
+        submitLabel="log in"
       />
+      <Link to={'/signup'}>sign up</Link>
     </Container>
   );
 }
 
-export default withSnackbar(Login);
+export default withRouter(withSnackbar(Login));

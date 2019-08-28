@@ -7,22 +7,9 @@ import Signup from './Signup';
 function AppRouter() {
   return (
     <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-          </ul>
-        </nav>
-
-        <Route path="/" exact component={HomePage} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-      </div>
+      <Route path="/" exact component={HomePage} />
+      <Route path="/login" component={Login} />
+      <Route path="/signup" component={Signup} />
     </Router>
   );
 }

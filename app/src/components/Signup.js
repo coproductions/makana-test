@@ -4,7 +4,7 @@ import { withSnackbar } from 'notistack';
 import { useMutation } from 'react-apollo';
 import EmailPasswordForm from './EmailPasswordForm';
 import gql from 'graphql-tag';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 const SIGN_UP = gql`
   mutation signup($email: String!, $password: String!, $name: String!) {
@@ -46,6 +46,7 @@ function Signup(props) {
         submitLabel="Sign up"
         includeName={true}
       />
+      <Link to={'/login'}>log in</Link>
     </Container>
   );
 }
