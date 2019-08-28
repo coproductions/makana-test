@@ -22,7 +22,10 @@ function Login(props) {
     if (error) {
       props.enqueueSnackbar(error.message, { variant: 'error' });
     }
-  }, [error]);
+    if (data && data.login && data.login.token) {
+      localStorage.setItem('token', data.login.token);
+    }
+  }, [error, data]);
 
   if (data && data.login && data.login.token) {
     return (
