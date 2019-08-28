@@ -5,6 +5,7 @@ import { useMutation } from 'react-apollo';
 import EmailPasswordForm from './EmailPasswordForm';
 import gql from 'graphql-tag';
 import { Redirect } from 'react-router-dom';
+import { AUTH_TOKEN } from '../constants';
 
 const LOGIN_USER = gql`
   mutation login($email: String!, $password: String!) {
@@ -23,7 +24,7 @@ function Login(props) {
       props.enqueueSnackbar(error.message, { variant: 'error' });
     }
     if (data && data.login && data.login.token) {
-      localStorage.setItem('token', data.login.token);
+      localStorage.setItem(AUTH_TOKEN, data.login.token);
     }
   }, [error, data]);
 

@@ -8,6 +8,7 @@ import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
+import { AUTH_TOKEN } from '../constants';
 
 // TODO: via env configs
 const WS_URL = 'ws://localhost:4000';
@@ -23,7 +24,7 @@ const httpLink = new HttpLink({ uri: HTTP_URL });
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem(AUTH_TOKEN);
   // return the headers to the context so httpLink can read them
   return {
     headers: {
