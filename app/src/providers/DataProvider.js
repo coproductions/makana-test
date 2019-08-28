@@ -9,11 +9,12 @@ import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import { AUTH_TOKEN } from '../constants';
+import { resolvers, typeDefs } from '../resolvers';
 
 // TODO: via env configs
 const WS_URL = 'ws://localhost:4000';
 const HTTP_URL = 'http://localhost:4000';
-
+const cache = new InMemoryCache();
 const wsLink = new WebSocketLink({
   uri: WS_URL,
   options: {
@@ -42,6 +43,11 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
         // error code is set to UNAUTHENTICATED
         // when AuthenticationError thrown in resolver
         localStorage.removeItem(AUTH_TOKEN);
+        cache.writeData({
+          data: {
+            isLoggedIn: false,
+          },
+        });
         const oldHeaders = operation.getContext().headers;
         operation.setContext({
           headers: {
@@ -69,6 +75,11 @@ const splitLink = split(
 
 const link = ApolloLink.from([authLink, errorLink, splitLink]);
 
-const client = new ApolloClient({ link, cache: new InMemoryCache() });
+const client = new ApolloClient({ link, cache, typeDefs, resolvers });
 
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem(AUTH_TOKEN),
+  },
+});
 export default ({ children }) => <ApolloProvider client={client}>{children}</ApolloProvider>;
