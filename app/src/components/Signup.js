@@ -6,17 +6,20 @@ import EmailPasswordForm from './EmailPasswordForm';
 import gql from 'graphql-tag';
 import { Redirect } from 'react-router-dom';
 
-const LOGIN_USER = gql`
-  mutation login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
+const SIGN_UP = gql`
+  mutation signup($email: String!, $password: String!, $name: String!) {
+    signup(email: $email, password: $password, name: $name) {
       token
+      user {
+        name
+      }
     }
   }
 `;
 
-function Login(props) {
-  const [values, setValues] = useState({ email: '', password: '', persist: 'true' });
-  const [login, { data, loading, error }] = useMutation(LOGIN_USER);
+function Signup(props) {
+  const [values, setValues] = useState({ email: '', password: '', name: '' });
+  const [signup, { data, loading, error }] = useMutation(SIGN_UP);
 
   useEffect(() => {
     if (error) {
@@ -24,7 +27,7 @@ function Login(props) {
     }
   }, [error]);
 
-  if (data && data.login && data.login.token) {
+  if (data && data.signup && data.signup.token) {
     return (
       <Redirect
         to={{
@@ -39,11 +42,12 @@ function Login(props) {
       <EmailPasswordForm
         values={values}
         setValues={setValues}
-        onSubmit={() => login({ variables: values })}
-        submitLabel="Log in"
+        onSubmit={() => signup({ variables: values })}
+        submitLabel="Sign up"
+        includeName={true}
       />
     </Container>
   );
 }
 
-export default withSnackbar(Login);
+export default withSnackbar(Signup);

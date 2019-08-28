@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function EmailPasswordForm({ values, setValues, onSubmit, submitLabel }) {
+function EmailPasswordForm({ values, setValues, onSubmit, submitLabel, includeName }) {
   const classes = useStyles();
 
   const handleChange = name => event => {
@@ -38,6 +38,18 @@ function EmailPasswordForm({ values, setValues, onSubmit, submitLabel }) {
         onSubmit();
       }}
     >
+      {includeName && (
+        <TextField
+          className={classes.textField}
+          value={values.name}
+          onChange={handleChange('name')}
+          label="name"
+          margin="normal"
+          variant="outlined"
+          name="name"
+          type="text"
+        />
+      )}
       <TextField
         className={classes.textField}
         value={values.email}
@@ -72,6 +84,7 @@ EmailPasswordForm.propTypes = {
   setValues: PropTypes.func,
   onSubmit: PropTypes.func,
   submitLabel: PropTypes.string,
+  includeName: PropTypes.bool,
 };
 
 export default EmailPasswordForm;
