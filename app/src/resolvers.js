@@ -9,10 +9,10 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Mutation: {
-    logout: (_, variables, { cache }) => {
+    logout: (_, variables, { cache, client }) => {
       localStorage.removeItem(AUTH_TOKEN);
       cache.writeData({ data: { isLoggedIn: false } });
-
+      client.resetStore();
       return null;
     },
   },

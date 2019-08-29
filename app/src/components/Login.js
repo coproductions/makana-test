@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
 import { Container, Link } from '@material-ui/core';
-import { withSnackbar } from 'notistack';
-import { useMutation, useApolloClient } from 'react-apollo';
-import EmailPasswordForm from './EmailPasswordForm';
-import gql from 'graphql-tag';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
+import { useMutation, useApolloClient } from 'react-apollo';
+import { withSnackbar } from 'notistack';
+import gql from 'graphql-tag';
+import React, { useState } from 'react';
+
 import { AUTH_TOKEN } from '../constants';
 import { useAuthStyles } from './styles';
+import EmailPasswordForm from './EmailPasswordForm';
 
 const LOGIN_USER = gql`
   mutation login($email: String!, $password: String!) {
@@ -16,26 +17,18 @@ const LOGIN_USER = gql`
   }
 `;
 
-function Login(props) {
-  const { cache } = useApolloClient();
+const Login = props => {
+  const client = useApolloClient();
   const [values, setValues] = useState({ email: '', password: '', persist: 'true' });
-  const [login, { data, loading, error }] = useMutation(LOGIN_USER);
-  const classes = useAuthStyles();
-
-  useEffect(() => {
-    if (error) {
-      props.enqueueSnackbar(error.message, { variant: 'error' });
-    }
-    if (data && data.login && data.login.token) {
+  const [login, { loading }] = useMutation(LOGIN_USER, {
+    onCompleted: data => {
       localStorage.setItem(AUTH_TOKEN, data.login.token);
-      cache.writeData({
-        data: {
-          isLoggedIn: true,
-        },
-      });
+      client.writeData({ data: { isLoggedIn: true } });
       props.history.push('/');
-    }
-  }, [error, data]);
+    },
+    onError: err => props.enqueueSnackbar(err.message, { variant: 'error' }),
+  });
+  const classes = useAuthStyles();
 
   return (
     <Container className={classes.container} maxWidth="sm">
@@ -44,12 +37,14 @@ function Login(props) {
         setValues={setValues}
         onSubmit={() => login({ variables: values })}
         submitLabel="log in"
+        loading={loading}
       />
+
       <Link component={RouterLink} to="/signup">
         signup
       </Link>
     </Container>
   );
-}
+};
 
 export default withRouter(withSnackbar(Login));

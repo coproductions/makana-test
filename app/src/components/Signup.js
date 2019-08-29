@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
 import { Container, Link } from '@material-ui/core';
+import { useMutation, useApolloClient } from 'react-apollo';
+import { withRouter, Link as RouterLink } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
-import { useMutation } from 'react-apollo';
-import EmailPasswordForm from './EmailPasswordForm';
 import gql from 'graphql-tag';
-import { Redirect, Link as RouterLink } from 'react-router-dom';
+import React, { useState } from 'react';
+
+import { AUTH_TOKEN } from '../constants';
 import { useAuthStyles } from './styles';
+import EmailPasswordForm from './EmailPasswordForm';
 
 const SIGN_UP = gql`
   mutation signup($email: String!, $password: String!, $name: String!) {
@@ -19,25 +21,17 @@ const SIGN_UP = gql`
 `;
 
 function Signup(props) {
+  const client = useApolloClient();
   const [values, setValues] = useState({ email: '', password: '', name: '' });
-  const [signup, { data, loading, error }] = useMutation(SIGN_UP);
+  const [signup] = useMutation(SIGN_UP, {
+    onCompleted: data => {
+      localStorage.setItem(AUTH_TOKEN, data.signup.token);
+      client.writeData({ data: { isLoggedIn: true } });
+      props.history.push('/');
+    },
+    onError: err => props.enqueueSnackbar(err.message, { variant: 'error' }),
+  });
   const classes = useAuthStyles();
-
-  useEffect(() => {
-    if (error) {
-      props.enqueueSnackbar(error.message, { variant: 'error' });
-    }
-  }, [error]);
-
-  if (data && data.signup && data.signup.token) {
-    return (
-      <Redirect
-        to={{
-          pathname: '/',
-        }}
-      />
-    );
-  }
 
   return (
     <Container className={classes.container} maxWidth="sm">
@@ -55,4 +49,4 @@ function Signup(props) {
   );
 }
 
-export default withSnackbar(Signup);
+export default withRouter(withSnackbar(Signup));

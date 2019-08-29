@@ -16,7 +16,7 @@ const enhanced = compose(
   graphql(query),
   withProps(({ data: { loading, feed } }) => ({
     loading: loading,
-    comments: feed
+    comments: feed,
   }))
 );
 

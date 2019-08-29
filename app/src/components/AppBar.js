@@ -4,12 +4,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { useApolloClient } from 'react-apollo';
-// import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from 'react-apollo';
-import { AUTH_TOKEN } from '../constants';
 import { withRouter } from 'react-router-dom';
 
 const GET_NAME = gql`
@@ -46,41 +42,38 @@ const useStyles = makeStyles(theme => ({
 
 const AppHeader = props => {
   const classes = useStyles();
-  const { cache } = useApolloClient();
-  const nameQuery = useQuery(GET_NAME);
   const loginQuery = useQuery(IS_LOGGED_IN);
+  const isLoggedIn = !loginQuery.loading && !loginQuery.error && loginQuery.data.isLoggedIn;
+  const nameQuery = useQuery(GET_NAME, { skip: !isLoggedIn });
   const [logout] = useMutation(LOG_OUT);
 
   const toLogin = () => {
     props.history.push('/login');
   };
 
-  if (!loginQuery.loading) {
-    const isLoggedIn = loginQuery.data.isLoggedIn;
-    return (
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            {isLoggedIn && nameQuery.data.me && (
-              <Typography variant="h6" className={classes.title}>
-                {nameQuery.data.me.name}
-              </Typography>
-            )}
-            {isLoggedIn && (
-              <Button color="inherit" onClick={logout}>
-                Logout
-              </Button>
-            )}
-            {!isLoggedIn && (
-              <Button color="inherit" onClick={toLogin}>
-                Sign in
-              </Button>
-            )}
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
-  }
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          {isLoggedIn && nameQuery.data.me && (
+            <Typography variant="h6" className={classes.title}>
+              {nameQuery.data.me.name}
+            </Typography>
+          )}
+          {isLoggedIn && (
+            <Button color="inherit" onClick={logout}>
+              Logout
+            </Button>
+          )}
+          {!isLoggedIn && (
+            <Button color="inherit" onClick={toLogin}>
+              Sign in
+            </Button>
+          )}
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
 };
 
 export default withRouter(AppHeader);

@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import Loading from './Loading';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function EmailPasswordForm({ values, setValues, onSubmit, submitLabel, includeName }) {
+function EmailPasswordForm({ values, setValues, onSubmit, submitLabel, includeName, loading }) {
   const classes = useStyles();
 
   const handleChange = name => event => {
@@ -71,7 +72,7 @@ function EmailPasswordForm({ values, setValues, onSubmit, submitLabel, includeNa
         name="password"
         type="password"
       />
-      <Button type="submit">{submitLabel}</Button>
+      {loading ? <Loading /> : <Button type="submit">{submitLabel}</Button>}
     </form>
   );
 }
@@ -85,6 +86,7 @@ EmailPasswordForm.propTypes = {
   onSubmit: PropTypes.func,
   submitLabel: PropTypes.string,
   includeName: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 
 export default EmailPasswordForm;
