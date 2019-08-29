@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container } from '@material-ui/core';
+import { Container, Link } from '@material-ui/core';
 import { withSnackbar } from 'notistack';
 import { useMutation } from 'react-apollo';
 import EmailPasswordForm from './EmailPasswordForm';
 import gql from 'graphql-tag';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect, Link as RouterLink } from 'react-router-dom';
+import { useAuthStyles } from './styles';
 
 const SIGN_UP = gql`
   mutation signup($email: String!, $password: String!, $name: String!) {
@@ -20,6 +21,7 @@ const SIGN_UP = gql`
 function Signup(props) {
   const [values, setValues] = useState({ email: '', password: '', name: '' });
   const [signup, { data, loading, error }] = useMutation(SIGN_UP);
+  const classes = useAuthStyles();
 
   useEffect(() => {
     if (error) {
@@ -38,7 +40,7 @@ function Signup(props) {
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container className={classes.container} maxWidth="sm">
       <EmailPasswordForm
         values={values}
         setValues={setValues}
@@ -46,7 +48,9 @@ function Signup(props) {
         submitLabel="Sign up"
         includeName={true}
       />
-      <Link to={'/login'}>log in</Link>
+      <Link component={RouterLink} to="/login">
+        login
+      </Link>{' '}
     </Container>
   );
 }
