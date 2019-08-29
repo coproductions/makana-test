@@ -5,7 +5,7 @@ import { get } from 'lodash';
 const messageTypeMapping = {
   CREATED: 'success',
   UPDATED: 'info',
-  DELETED: 'warning'
+  DELETED: 'warning',
 };
 
 const messageType = type => get(messageTypeMapping, type, 'error');
@@ -13,15 +13,15 @@ const messageType = type => get(messageTypeMapping, type, 'error');
 export default compose(
   withSnackbar,
   lifecycle({
-    componentWillReceiveProps(nextProps) {
-      if (this.props === nextProps) {
+    componentDidUpdate(prevProps) {
+      if (this.props === prevProps) {
         return;
       }
 
-      this.props.enqueueSnackbar(nextProps.message, {
-        variant: messageType(nextProps.mutation)
+      this.props.enqueueSnackbar(this.props.message, {
+        variant: messageType(this.props.mutation),
       });
-    }
+    },
   }),
   renderNothing
 )();
