@@ -1,32 +1,13 @@
-import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import gql from 'graphql-tag';
 import { useQuery, useMutation } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import React from 'react';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 
-const GET_NAME = gql`
-  {
-    me {
-      name
-    }
-  }
-`;
-
-const IS_LOGGED_IN = gql`
-  query IsUserLoggedIn {
-    isLoggedIn @client
-  }
-`;
-
-const LOG_OUT = gql`
-  mutation logout {
-    logout @client
-  }
-`;
+import { IS_LOGGED_IN, GET_NAME, LOG_OUT } from '../operations';
 
 const useStyles = makeStyles(theme => ({
   root: {

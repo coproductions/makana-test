@@ -2,23 +2,12 @@ import { Container, Link } from '@material-ui/core';
 import { useMutation, useApolloClient } from 'react-apollo';
 import { withRouter, Link as RouterLink } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
-import gql from 'graphql-tag';
 import React, { useState } from 'react';
 
 import { AUTH_TOKEN } from '../constants';
 import { useAuthStyles } from './styles';
 import EmailPasswordForm from './EmailPasswordForm';
-
-const SIGN_UP = gql`
-  mutation signup($email: String!, $password: String!, $name: String!) {
-    signup(email: $email, password: $password, name: $name) {
-      token
-      user {
-        name
-      }
-    }
-  }
-`;
+import { FEED_QUERY, SIGN_UP } from '../operations';
 
 function Signup(props) {
   const client = useApolloClient();
@@ -28,6 +17,14 @@ function Signup(props) {
       localStorage.setItem(AUTH_TOKEN, data.signup.token);
       client.writeData({ data: { isLoggedIn: true } });
       props.history.push('/');
+    },
+    refetchQueries: ({ data, error }) => {
+      if (data && data.login.token) {
+        localStorage.setItem(AUTH_TOKEN, data.login.token);
+        client.writeData({ data: { isLoggedIn: true } });
+        props.history.push('/');
+      }
+      return [{ query: FEED_QUERY }];
     },
     onError: err => props.enqueueSnackbar(err.message, { variant: 'error' }),
   });

@@ -11,8 +11,8 @@ export const resolvers = {
   Mutation: {
     logout: (_, variables, { cache, client }) => {
       localStorage.removeItem(AUTH_TOKEN);
-      cache.writeData({ data: { isLoggedIn: false } });
       client.resetStore();
+      cache.writeData({ data: { isLoggedIn: false } });
       return null;
     },
   },
