@@ -8,6 +8,9 @@ export const FEED_SUBSCRIPTION = gql`
         id
         message
         updatedAt
+        author {
+          name
+        }
       }
       previousValues {
         id

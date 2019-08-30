@@ -6,6 +6,12 @@ export const FEED_QUERY = gql`
       id
       message
       createdAt
+      author {
+        name
+      }
+      children {
+        id
+      }
     }
   }
 `;

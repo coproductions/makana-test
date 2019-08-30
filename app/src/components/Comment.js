@@ -4,26 +4,30 @@ import TimeAgo from 'react-timeago';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   card: {
     margin: theme.spacing(2),
-    maxWidth: 400
-  }
+    maxWidth: 400,
+  },
 });
 
 const enhanced = compose(withStyles(styles));
 
-export default enhanced(({ classes, message, createdAt }) => (
+export default enhanced(({ classes, message, createdAt, author }) => (
   <Card className={classes.card}>
-    <CardContent>
+    <CardActions>
       <Typography variant="subtitle1" color="textSecondary" gutterBottom>
+        {author.name}
+      </Typography>
+      <Typography variant="subtitle3" color="textSecondary" gutterBottom>
         <TimeAgo date={createdAt} />
       </Typography>
-      <Typography variant="h5" component="h2">
-        {message}
-      </Typography>
+    </CardActions>
+    <CardContent>
+      <Typography variant="body1">{message}</Typography>
     </CardContent>
   </Card>
 ));
