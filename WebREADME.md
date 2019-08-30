@@ -9,8 +9,7 @@ _Any changes to app or server are at your discretion to complete the challenge_
 
 Fork the repo and build out the remainder of the application to support the following requirements:
 
-- User login and rea
-
+- User login and logout
 - View list of comments and replies
 - Add/edit/delete comments and replies
   - Private/public comment toggle (Private comments only viewable to authenticated users)

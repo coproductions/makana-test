@@ -36,11 +36,9 @@ const AppHeader = props => {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          {isLoggedIn && nameQuery.data.me && (
-            <Typography variant="h6" className={classes.title}>
-              {nameQuery.data.me.name}
-            </Typography>
-          )}
+          <Typography variant="h6" className={classes.title}>
+            {isLoggedIn && nameQuery.data.me ? nameQuery.data.me.name : ''}
+          </Typography>
           {isLoggedIn && (
             <Button color="inherit" onClick={logout}>
               Logout
