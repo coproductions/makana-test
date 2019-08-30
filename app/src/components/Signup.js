@@ -1,34 +1,18 @@
 import { Container, Link } from '@material-ui/core';
-import { useMutation, useApolloClient } from 'react-apollo';
 import { withRouter, Link as RouterLink } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { compose } from 'recompose';
 
-import { AUTH_TOKEN } from '../constants';
 import { useAuthStyles } from './styles';
 import EmailPasswordForm from './EmailPasswordForm';
-import { FEED_QUERY, SIGN_UP } from '../operations';
+import { SIGN_UP } from '../operations';
+import { useAuthMutation } from '../hooks/useAuthMutation';
 
 function Signup(props) {
-  const client = useApolloClient();
   const [values, setValues] = useState({ email: '', password: '', name: '' });
-  const [signup] = useMutation(SIGN_UP, {
-    onCompleted: data => {
-      localStorage.setItem(AUTH_TOKEN, data.signup.token);
-      client.writeData({ data: { isLoggedIn: true } });
-      props.history.push('/');
-    },
-    refetchQueries: ({ data, error }) => {
-      if (data && data.login.token) {
-        localStorage.setItem(AUTH_TOKEN, data.login.token);
-        client.writeData({ data: { isLoggedIn: true } });
-        props.history.push('/');
-      }
-      return [{ query: FEED_QUERY, variables: { showPrivate: false } }];
-    },
-    onError: err => props.enqueueSnackbar(err.message, { variant: 'error' }),
-  });
+  const [signup, loading] = useAuthMutation({ mutation: SIGN_UP, ...props });
+
   const classes = useAuthStyles();
 
   return (
@@ -39,6 +23,7 @@ function Signup(props) {
         onSubmit={() => signup({ variables: values })}
         submitLabel="Sign up"
         includeName={true}
+        loading={loading}
       />
       <Link component={RouterLink} to="/login">
         login

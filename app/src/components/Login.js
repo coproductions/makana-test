@@ -1,29 +1,17 @@
 import { Container, Link } from '@material-ui/core';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
-import { useMutation, useApolloClient } from 'react-apollo';
 import { withSnackbar } from 'notistack';
 import React, { useState } from 'react';
 
-import { AUTH_TOKEN } from '../constants';
 import { useAuthStyles } from './styles';
 import EmailPasswordForm from './EmailPasswordForm';
-import { FEED_QUERY, LOGIN_USER } from '../operations';
+import { LOGIN_USER } from '../operations';
 import { compose } from 'recompose';
+import { useAuthMutation } from '../hooks';
 
 const Login = props => {
-  const client = useApolloClient();
   const [values, setValues] = useState({ email: '', password: '', persist: 'true' });
-  const [login, { loading }] = useMutation(LOGIN_USER, {
-    onError: err => props.enqueueSnackbar(err.message, { variant: 'error' }),
-    refetchQueries: ({ data, error }) => {
-      if (data && data.login.token) {
-        localStorage.setItem(AUTH_TOKEN, data.login.token);
-        client.writeData({ data: { isLoggedIn: true } });
-        props.history.push('/');
-      }
-      return [{ query: FEED_QUERY, variables: { showPrivate: false } }];
-    },
-  });
+  const [login, loading] = useAuthMutation({ mutation: LOGIN_USER, ...props });
   const classes = useAuthStyles();
 
   return (
