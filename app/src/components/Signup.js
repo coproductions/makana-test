@@ -3,6 +3,7 @@ import { useMutation, useApolloClient } from 'react-apollo';
 import { withRouter, Link as RouterLink } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
 import React, { useState } from 'react';
+import { compose } from 'recompose';
 
 import { AUTH_TOKEN } from '../constants';
 import { useAuthStyles } from './styles';
@@ -24,7 +25,7 @@ function Signup(props) {
         client.writeData({ data: { isLoggedIn: true } });
         props.history.push('/');
       }
-      return [{ query: FEED_QUERY }];
+      return [{ query: FEED_QUERY, variables: { showPrivate: false } }];
     },
     onError: err => props.enqueueSnackbar(err.message, { variant: 'error' }),
   });
@@ -45,5 +46,7 @@ function Signup(props) {
     </Container>
   );
 }
-
-export default withRouter(withSnackbar(Signup));
+export default compose(
+  withRouter,
+  withSnackbar
+)(Signup);

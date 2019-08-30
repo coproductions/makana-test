@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const FEED_QUERY = gql`
-  query feed {
-    feed {
+  query feed($showPrivate: Boolean!) {
+    feed(showPrivate: $showPrivate) {
       id
       message
       createdAt

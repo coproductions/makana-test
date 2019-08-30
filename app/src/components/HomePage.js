@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'recompose';
 import FeedData from '../containers/FeedData';
@@ -18,13 +18,17 @@ const styles = theme => ({
 
 const enhanced = compose(withStyles(styles));
 
-export default enhanced(({ classes }) => (
-  <React.Fragment>
-    <AppBar />
-    <div className={classes.page}>
-      <FeedSubscriptionData>{props => <Notice {...props} />}</FeedSubscriptionData>
+export default enhanced(({ classes }) => {
+  const [showPrivate, setShowPrivate] = useState(false);
 
-      <FeedData>{props => <ListComments {...props} />}</FeedData>
-    </div>
-  </React.Fragment>
-));
+  return (
+    <React.Fragment>
+      <AppBar showPrivate={showPrivate} setShowPrivate={setShowPrivate} />
+      <div className={classes.page}>
+        <FeedSubscriptionData>{props => <Notice {...props} />}</FeedSubscriptionData>
+
+        <FeedData showPrivate={showPrivate}>{props => <ListComments {...props} />}</FeedData>
+      </div>
+    </React.Fragment>
+  );
+});

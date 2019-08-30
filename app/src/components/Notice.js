@@ -8,13 +8,13 @@ const messageTypeMapping = {
   DELETED: 'warning',
 };
 
-const messageType = type => get(messageTypeMapping, type, 'error');
+const messageType = type => get(messageTypeMapping, type, 'warning');
 
 export default compose(
   withSnackbar,
   lifecycle({
     componentDidUpdate(prevProps) {
-      if (this.props === prevProps) {
+      if (this.props === prevProps || this.props.data.loading) {
         return;
       }
 

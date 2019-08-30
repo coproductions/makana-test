@@ -1,7 +1,7 @@
 # import * from "./generated/prisma.graphql"
 
 type Query {
-  feed: [Comment!]!
+  feed(showPrivate: Boolean!): [Comment!]!
   comment(id: ID!): Comment
   me: User
 }

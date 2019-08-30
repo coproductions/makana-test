@@ -8,7 +8,6 @@ const enhanced = compose(
     if (!feedSubscription) {
       return;
     }
-
     const { mutation, previousValues, node } = feedSubscription;
     const values = mutation === 'DELETED' ? previousValues : node;
 

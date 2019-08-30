@@ -11,6 +11,9 @@ export const FEED_SUBSCRIPTION = gql`
         author {
           name
         }
+        children {
+          id
+        }
       }
       previousValues {
         id

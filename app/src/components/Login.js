@@ -8,6 +8,7 @@ import { AUTH_TOKEN } from '../constants';
 import { useAuthStyles } from './styles';
 import EmailPasswordForm from './EmailPasswordForm';
 import { FEED_QUERY, LOGIN_USER } from '../operations';
+import { compose } from 'recompose';
 
 const Login = props => {
   const client = useApolloClient();
@@ -20,7 +21,7 @@ const Login = props => {
         client.writeData({ data: { isLoggedIn: true } });
         props.history.push('/');
       }
-      return [{ query: FEED_QUERY }];
+      return [{ query: FEED_QUERY, variables: { showPrivate: false } }];
     },
   });
   const classes = useAuthStyles();
@@ -42,4 +43,7 @@ const Login = props => {
   );
 };
 
-export default withRouter(withSnackbar(Login));
+export default compose(
+  withRouter,
+  withSnackbar
+)(Login);

@@ -22,7 +22,7 @@ export default enhanced(({ classes, message, createdAt, author }) => (
       <Typography variant="subtitle1" color="textSecondary" gutterBottom>
         {author.name}
       </Typography>
-      <Typography variant="subtitle3" color="textSecondary" gutterBottom>
+      <Typography variant="subtitle2" color="textSecondary" gutterBottom>
         <TimeAgo date={createdAt} />
       </Typography>
     </CardActions>
