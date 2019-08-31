@@ -1,6 +1,5 @@
 import { Container, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
-import { withSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { useAuthStyles } from './styles';
 import EmailPasswordForm from './EmailPasswordForm';
@@ -30,7 +29,4 @@ const Login = props => {
   );
 };
 
-export default compose(
-  withRouter,
-  withSnackbar
-)(Login);
+export default compose(withRouter)(Login);

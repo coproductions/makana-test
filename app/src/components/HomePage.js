@@ -7,7 +7,8 @@ import ListComments from './ListComments';
 import Notice from './Notice';
 import AppBar from './AppBar';
 import PostComment from './PostComment';
-import { useUserQuery } from '../hooks';
+import { useUserQuery, useFeedSubscription } from '../hooks';
+import { useSnackbar } from 'notistack';
 
 const styles = theme => ({
   page: {
@@ -18,22 +19,25 @@ const styles = theme => ({
   feedContainer: {},
 });
 
-const enhanced = compose(withStyles(styles));
-
-export default enhanced(({ classes }) => {
+export const HomePage = ({ classes }) => {
   const [showPrivate, setShowPrivate] = useState(false);
   const { isLoggedIn } = useUserQuery();
-
+  const { loading, data } = useFeedSubscription(showPrivate);
+  console.log(data);
   return (
     <React.Fragment>
       <div className={classes.page}>
         <AppBar showPrivate={showPrivate} setShowPrivate={setShowPrivate} />
         <Container maxWidth="sm" className={classes.feedContainer}>
           {isLoggedIn && <PostComment />}
-          <FeedSubscriptionData>{props => <Notice {...props} />}</FeedSubscriptionData>
+          {
+            //  <FeedSubscriptionData>{props => <Notice {...props} />}</FeedSubscriptionData>
+          }
           <FeedData showPrivate={showPrivate}>{props => <ListComments {...props} />}</FeedData>
         </Container>
       </div>
     </React.Fragment>
   );
-});
+};
+
+export default compose(withStyles(styles))(HomePage);

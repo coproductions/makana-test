@@ -72,7 +72,13 @@ function EmailPasswordForm({ values, setValues, onSubmit, submitLabel, includeNa
         name="password"
         type="password"
       />
-      {loading ? <Loading /> : <Button type="submit">{submitLabel}</Button>}
+      {loading ? (
+        <Loading />
+      ) : (
+        <Button variant="outlined" type="submit">
+          {submitLabel}
+        </Button>
+      )}
     </form>
   );
 }

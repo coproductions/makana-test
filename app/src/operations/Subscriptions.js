@@ -1,20 +1,17 @@
 import gql from 'graphql-tag';
 
 export const FEED_SUBSCRIPTION = gql`
-  subscription {
-    feedSubscription {
+  subscription feedSubscription($showPrivate: Boolean!, $isLoggedIn: Boolean!) {
+    feedSubscription(showPrivate: $showPrivate, isLoggedIn: $isLoggedIn) {
       mutation
       node {
-        id
-        message
-        updatedAt
+        isPublic
         author {
           name
-        }
-        children {
           id
         }
       }
+
       previousValues {
         id
         message

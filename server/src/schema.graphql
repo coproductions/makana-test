@@ -19,7 +19,10 @@ type Mutation {
 }
 
 type Subscription {
-  feedSubscription: CommentSubscriptionPayload
+  feedSubscription(
+    showPrivate: Boolean!
+    isLoggedIn: Boolean!
+  ): CommentSubscriptionPayload
 }
 
 type AuthPayload {

@@ -1,12 +1,11 @@
 const Subscription = {
   feedSubscription: {
-    subscribe: (parent, args, ctx, info) => {
-      // TODO: handle authenticated subscriptions
+    subscribe: (parent, { showPrivate, isLoggedIn }, ctx, info) => {
       return ctx.db.subscription.comment(
         {
           where: {
             node: {
-              isPublic: true
+              isPublic: !isLoggedIn || !showPrivate
             }
           }
         },

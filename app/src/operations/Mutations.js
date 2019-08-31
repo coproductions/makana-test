@@ -24,3 +24,11 @@ export const LOG_OUT = gql`
     logout @client
   }
 `;
+
+export const CREATE_COMMENT = gql`
+  mutation createComment($message: String!, $isPublic: Boolean!, $parentCommentId: ID) {
+    createComment(message: $message, isPublic: $isPublic, parentCommentId: $parentCommentId) {
+      id
+    }
+  }
+`;

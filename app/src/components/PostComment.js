@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { withStyles, colors, Paper, IconButton, Button, InputBase, Divider } from '@material-ui/core';
 import PrivateIcon from '@material-ui/icons/VpnLock';
 import PublicIcon from '@material-ui/icons/Public';
-import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import { useMutation } from 'react-apollo';
 import { compose } from 'recompose';
+import { CREATE_COMMENT } from '../operations';
 
 const styles = theme => ({
   paper: {
@@ -36,6 +36,10 @@ const styles = theme => ({
 
 const PostComment = ({ classes }) => {
   const [isPublic, setIsPublic] = useState(true);
+  const [message, setMessage] = useState('');
+
+  const [createComment] = useMutation(CREATE_COMMENT);
+
   return (
     <Paper className={classes.paper} elevation={3}>
       <Tooltip title={isPublic ? 'Public' : 'Private'}>
@@ -48,9 +52,20 @@ const PostComment = ({ classes }) => {
         </IconButton>
       </Tooltip>
 
-      <InputBase className={classes.input} multiline={true} rowsMax={5} placeholder="Type your mind ..." />
+      <InputBase
+        value={message}
+        onChange={e => setMessage(e.target.value)}
+        className={classes.input}
+        multiline={true}
+        rowsMax={5}
+        placeholder="Type your mind ..."
+      />
       <Divider className={classes.divider} orientation="vertical" />
-      <Button className={classes.iconButton} aria-label="search">
+      <Button
+        onClick={() => createComment({ variables: { message, isPublic } })}
+        className={classes.iconButton}
+        aria-label="search"
+      >
         Post
       </Button>
     </Paper>
