@@ -1,8 +1,7 @@
-import { Container, Link } from '@material-ui/core';
+import { Container, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
 import React, { useState } from 'react';
-
 import { useAuthStyles } from './styles';
 import EmailPasswordForm from './EmailPasswordForm';
 import { LOGIN_USER } from '../operations';
@@ -23,10 +22,10 @@ const Login = props => {
         submitLabel="log in"
         loading={loading}
       />
-
-      <Link component={RouterLink} to="/signup">
-        signup
-      </Link>
+      <BottomNavigation showLabels className={classes.root}>
+        <BottomNavigationAction component={RouterLink} to="/" label="home" />
+        <BottomNavigationAction component={RouterLink} to="/signup" label="signup" />
+      </BottomNavigation>
     </Container>
   );
 };
