@@ -25,7 +25,7 @@ function EmailPasswordForm({ values, setValues, onSubmit, submitLabel, includeNa
   const handleChange = name => event => {
     setValues({
       ...values,
-      [name]: event.target.value,
+      [name]: event.target.value.trim(),
     });
   };
 

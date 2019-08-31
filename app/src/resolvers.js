@@ -12,7 +12,7 @@ export const resolvers = {
     logout: (_, variables, { cache, client }) => {
       localStorage.removeItem(AUTH_TOKEN);
       client.resetStore();
-      cache.writeData({ data: { isLoggedIn: false } });
+      client.writeData({ data: { isLoggedIn: false } });
       return null;
     },
   },

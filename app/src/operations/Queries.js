@@ -16,10 +16,12 @@ export const FEED_QUERY = gql`
   }
 `;
 
-export const GET_NAME = gql`
+export const GET_USER = gql`
   {
     me {
       name
+      email
+      id
     }
   }
 `;

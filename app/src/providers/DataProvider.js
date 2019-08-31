@@ -77,7 +77,7 @@ const link = ApolloLink.from([authLink, errorLink, splitLink]);
 
 const client = new ApolloClient({ link, cache, typeDefs, resolvers });
 
-cache.writeData({
+client.writeData({
   data: {
     isLoggedIn: !!localStorage.getItem(AUTH_TOKEN),
   },

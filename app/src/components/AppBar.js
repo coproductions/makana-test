@@ -1,10 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { useQuery, useMutation } from 'react-apollo';
+import { useMutation } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 import { AppBar, Button, Toolbar, Switch, FormControlLabel } from '@material-ui/core';
 import React from 'react';
-
-import { IS_LOGGED_IN, LOG_OUT } from '../operations';
+import { useUserQuery } from '../hooks';
+import { LOG_OUT } from '../operations';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,8 +20,7 @@ const useStyles = makeStyles(theme => ({
 
 const AppHeader = props => {
   const classes = useStyles();
-  const loginQuery = useQuery(IS_LOGGED_IN);
-  const isLoggedIn = !loginQuery.loading && !loginQuery.error && loginQuery.data.isLoggedIn;
+  const { isLoggedIn } = useUserQuery();
   const [logout] = useMutation(LOG_OUT);
 
   const toLogin = () => {
@@ -42,7 +41,7 @@ const AppHeader = props => {
                   inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />
               }
-              label="Private"
+              label="Private mode"
             />
           )}
           <div className={classes.grow}></div>
