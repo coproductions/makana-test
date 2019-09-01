@@ -21,7 +21,7 @@ const Login = props => {
         submitLabel="log in"
         loading={loading}
       />
-      <BottomNavigation showLabels className={classes.root}>
+      <BottomNavigation className={classes.root}>
         <BottomNavigationAction component={RouterLink} to="/" label="home" />
         <BottomNavigationAction component={RouterLink} to="/signup" label="signup" />
       </BottomNavigation>

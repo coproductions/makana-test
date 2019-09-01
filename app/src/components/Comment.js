@@ -1,12 +1,12 @@
-import { CardContent, colors, Typography, CardHeader, Avatar, IconButton } from '@material-ui/core';
+import { CardContent, Collapse, colors, Typography, CardHeader, Avatar, IconButton } from '@material-ui/core';
 import { compose } from 'recompose';
 import { useMutation } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import DeleteIcon from '@material-ui/icons/Delete';
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import TimeAgo from 'react-timeago';
-
+import Replies from './Replies';
 import { DELETE_COMMENT, FEED_QUERY } from '../operations';
 import { useUserQuery } from '../hooks';
 import Loading from './Loading';
@@ -25,12 +25,18 @@ const styles = theme => ({
     color: '#fff',
     backgroundColor: colors.grey[900],
   },
+  bottomNav: {
+    display: 'flex',
+    justifyContent: 'center',
+    height: 25,
+  },
 });
 
 const enhanced = compose(withStyles(styles));
 
-export default enhanced(({ classes, message, createdAt, author, id, isPublic, showPrivate }) => {
+export default enhanced(({ classes, message, createdAt, author, id, isPublic, showPrivate, children }) => {
   const { me } = useUserQuery();
+  const [expandComments, setExpandComments] = useState(false);
   const [deleteComment, { loading }] = useMutation(DELETE_COMMENT, {
     update: (cache, { data }) => {
       try {
@@ -84,6 +90,19 @@ export default enhanced(({ classes, message, createdAt, author, id, isPublic, sh
             <Typography variant="body1">{message}</Typography>
           </CardContent>
         </Fragment>
+      )}
+      {!!true && (
+        <Collapse in={true} collapsedHeight="100">
+          <div className={classes.bottomNav}>
+            <Typography
+              onClick={() => setExpandComments(!expandComments)}
+              variant="caption"
+            >{`${children.length} replies`}</Typography>
+          </div>
+          {expandComments && (
+            <Replies {...{ classes, message, createdAt, author, id, isPublic, showPrivate, children }} />
+          )}
+        </Collapse>
       )}
     </Card>
   );

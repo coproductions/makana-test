@@ -23,7 +23,7 @@ function Signup(props) {
         includeName={true}
         loading={loading}
       />
-      <BottomNavigation showLabels className={classes.root}>
+      <BottomNavigation className={classes.root}>
         <BottomNavigationAction component={RouterLink} to="/" label="home" />
         <BottomNavigationAction component={RouterLink} to="/login" label="login" />
       </BottomNavigation>

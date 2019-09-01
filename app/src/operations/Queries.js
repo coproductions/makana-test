@@ -33,3 +33,27 @@ export const IS_LOGGED_IN = gql`
     isLoggedIn @client
   }
 `;
+
+export const COMMENT_QUERY = gql`
+  query comment($id: ID!) {
+    comment(id: $id) {
+      id
+      isPublic
+      message
+      createdAt
+      author {
+        name
+        id
+      }
+      children {
+        id
+        message
+        createdAt
+        author {
+          name
+          id
+        }
+      }
+    }
+  }
+`;
