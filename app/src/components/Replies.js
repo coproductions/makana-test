@@ -5,6 +5,7 @@ import PostReply from './PostReply';
 import Reply from './Reply';
 import { COMMENT_QUERY } from '../operations';
 import { useQuery } from 'react-apollo';
+import { useUserQuery } from '../hooks';
 
 const useStyles = makeStyles(theme => ({
   replies: {
@@ -13,6 +14,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Replies = props => {
+  const { isLoggedIn } = useUserQuery();
+
   const classes = useStyles();
   const {
     data: { comment },
@@ -23,7 +26,7 @@ const Replies = props => {
   });
   return (
     <div className={classes.replies}>
-      <PostReply {...props} loading={loading} />
+      {isLoggedIn && <PostReply {...props} loading={loading} />}
       {comment && comment.children.map(c => <Reply key={c.id} {...c} />)}
     </div>
   );
