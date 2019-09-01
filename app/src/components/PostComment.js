@@ -46,23 +46,22 @@ const PostComment = ({ classes, showPrivate }) => {
   const [createComment, { loading }] = useMutation(CREATE_COMMENT, {
     onCompleted: () => setMessage(''),
     update: (cache, { data }) => {
-      let isQueryPrivate = showPrivate;
-
+      let updatePrivate = false;
       if (!data.createComment.isPublic && !showPrivate) {
         enqueueSnackbar('You added a private comment. Switch on private mode to see it.', {
           variant: 'info',
         });
-        isQueryPrivate = true;
+        updatePrivate = true;
       }
 
       try {
         const { feed } = cache.readQuery({
           query: FEED_QUERY,
-          variables: { showPrivate: isQueryPrivate },
+          variables: { showPrivate: updatePrivate || showPrivate },
         });
         cache.writeQuery({
           query: FEED_QUERY,
-          variables: { showPrivate },
+          variables: { showPrivate: updatePrivate || showPrivate },
 
           data: {
             feed: [{ ...data.createComment, children: [], author: me }, ...feed],
