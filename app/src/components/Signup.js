@@ -1,4 +1,4 @@
-import { Container, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import { Typography, Container, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import { withRouter, Link as RouterLink } from 'react-router-dom';
 import React, { useState } from 'react';
 import { compose } from 'recompose';
@@ -15,6 +15,8 @@ function Signup(props) {
 
   return (
     <Container className={classes.container} maxWidth="sm">
+      <Typography variant="h3">Sign up</Typography>
+
       <EmailPasswordForm
         values={values}
         setValues={setValues}
@@ -24,8 +26,8 @@ function Signup(props) {
         loading={loading}
       />
       <BottomNavigation className={classes.root}>
-        <BottomNavigationAction component={RouterLink} to="/" label="home" />
-        <BottomNavigationAction component={RouterLink} to="/login" label="login" />
+        <BottomNavigationAction showLabel component={RouterLink} to="/" label="home" />
+        <BottomNavigationAction showLabel component={RouterLink} to="/login" label="login" />
       </BottomNavigation>
     </Container>
   );
