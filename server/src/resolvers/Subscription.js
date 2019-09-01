@@ -5,7 +5,7 @@ const Subscription = {
         {
           where: {
             node: {
-              isPublic: !!userId || !showPrivate,
+              // isPublic: !!userId || !showPrivate,
               NOT: {
                 author: {
                   id: userId

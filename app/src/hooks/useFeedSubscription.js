@@ -3,8 +3,9 @@ import { useQuery } from 'react-apollo';
 import { FEED_SUBSCRIPTION, FEED_QUERY } from '../operations';
 import { useUserQuery } from './useUserQuery';
 import { get } from 'lodash';
-
+import { useRef } from 'react';
 export const useFeedSubscription = showPrivate => {
+  const ref = useRef(null);
   const { isLoggedIn, me } = useUserQuery();
   const { enqueueSnackbar } = useSnackbar();
   const { data, error, loading, subscribeToMore } = useQuery(FEED_QUERY, {
@@ -17,9 +18,13 @@ export const useFeedSubscription = showPrivate => {
   }
 
   if (!loading && data) {
-    subscribeToMore({
+    if (ref.current) {
+      // unsubscribe previous subscription
+      ref.current();
+    }
+    ref.current = subscribeToMore({
       document: FEED_SUBSCRIPTION,
-      shouldResubscribe: false,
+      shouldResubscribe: true,
       variables: { showPrivate: !!isLoggedIn, userId: me ? me.id : '' },
 
       updateQuery: (prev, { subscriptionData }) => {
@@ -28,9 +33,8 @@ export const useFeedSubscription = showPrivate => {
         switch (mutation) {
           case 'CREATED':
             const newItem = get(subscriptionData, 'data.feedSubscription.node', null);
-            console.log('new item', newItem, prev);
+            console.log('in here', newItem, showPrivate);
             if (newItem && me && me.id !== newItem.author.id && (newItem.isPublic || showPrivate)) {
-              console.log('returning');
               return { feed: [{ ...newItem, children: [] }, ...prev.feed.filter(c => c.id !== newItem.id)] };
             }
             return prev;
