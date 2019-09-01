@@ -4,11 +4,12 @@ import { useMutation } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import DeleteIcon from '@material-ui/icons/Delete';
-import React from 'react';
+import React, { Fragment } from 'react';
 import TimeAgo from 'react-timeago';
 
 import { DELETE_COMMENT, FEED_QUERY } from '../operations';
 import { useUserQuery } from '../hooks';
+import Loading from './Loading';
 
 const styles = theme => ({
   card: {
@@ -52,32 +53,38 @@ export default enhanced(({ classes, message, createdAt, author, id, isPublic, sh
 
   return (
     <Card className={classes.card}>
-      <CardHeader
-        avatar={
-          <Avatar
-            className={isPublic ? classes.publicAvatar : classes.privateAvatar}
-            aria-label={author.name}
-          >
-            {author.name[0].toUpperCase()}
-          </Avatar>
-        }
-        action={
-          isMine && (
-            <IconButton
-              aria-label="delete"
-              disabled={loading}
-              onClick={() => deleteComment({ variables: { id } })}
-            >
-              <DeleteIcon />
-            </IconButton>
-          )
-        }
-        title={author.name}
-        subheader={<TimeAgo date={createdAt} />}
-      ></CardHeader>
-      <CardContent>
-        <Typography variant="body1">{message}</Typography>
-      </CardContent>
+      {loading ? (
+        <Loading centered padding={20} />
+      ) : (
+        <Fragment>
+          <CardHeader
+            avatar={
+              <Avatar
+                className={isPublic ? classes.publicAvatar : classes.privateAvatar}
+                aria-label={author.name}
+              >
+                {author.name[0].toUpperCase()}
+              </Avatar>
+            }
+            action={
+              isMine && (
+                <IconButton
+                  aria-label="delete"
+                  disabled={loading}
+                  onClick={() => deleteComment({ variables: { id } })}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              )
+            }
+            title={author.name}
+            subheader={<TimeAgo date={createdAt} />}
+          ></CardHeader>
+          <CardContent>
+            <Typography variant="body1">{message}</Typography>
+          </CardContent>
+        </Fragment>
+      )}
     </Card>
   );
 });

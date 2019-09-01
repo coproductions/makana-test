@@ -42,7 +42,6 @@ const PostComment = ({ classes, showPrivate }) => {
   const [message, setMessage] = useState('');
   const { me } = useUserQuery();
   const { enqueueSnackbar } = useSnackbar();
-
   const [createComment, { loading }] = useMutation(CREATE_COMMENT, {
     onCompleted: () => setMessage(''),
     update: (cache, { data }) => {
@@ -95,11 +94,11 @@ const PostComment = ({ classes, showPrivate }) => {
           placeholder="Type your mind ..."
         />
         <Divider className={classes.divider} orientation="vertical" />
-        <Button onClick={addComment} className={classes.iconButton} aria-label="search">
+        <Button onClick={addComment} className={classes.iconButton} disabled={!message} aria-label="post">
           Post
         </Button>
       </Paper>
-      {loading && <Loading />}
+      {loading && <Loading centered />}
     </Fragment>
   );
 };
