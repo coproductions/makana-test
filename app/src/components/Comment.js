@@ -31,6 +31,18 @@ const styles = theme => ({
     justifyContent: 'center',
     height: 25,
   },
+  header: {
+    paddingTop: 0,
+    paddingBottom: theme.spacing(0),
+    borderBottom: `2px solid ${colors.grey[100]}`,
+  },
+  content: {
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
+  },
+  deleteButton: {
+    marginTop: theme.spacing(2),
+  },
 });
 
 const enhanced = compose(withStyles(styles));
@@ -66,6 +78,7 @@ export default enhanced(({ classes, message, createdAt, author, id, isPublic, sh
       ) : (
         <Fragment>
           <CardHeader
+            className={classes.header}
             avatar={
               <Avatar
                 className={isPublic ? classes.publicAvatar : classes.privateAvatar}
@@ -77,18 +90,19 @@ export default enhanced(({ classes, message, createdAt, author, id, isPublic, sh
             action={
               isMine && (
                 <IconButton
+                  className={classes.deleteButton}
                   aria-label="delete"
                   disabled={loading}
                   onClick={() => deleteComment({ variables: { id } })}
                 >
-                  <DeleteIcon />
+                  <DeleteIcon fontSize="small" />
                 </IconButton>
               )
             }
             title={author.name}
             subheader={<TimeAgo date={createdAt} />}
           ></CardHeader>
-          <CardContent>
+          <CardContent className={classes.content}>
             <Typography variant="body1">{message}</Typography>
           </CardContent>
         </Fragment>
