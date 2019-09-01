@@ -1,11 +1,16 @@
 const Subscription = {
   feedSubscription: {
-    subscribe: (parent, { showPrivate, isLoggedIn }, ctx, info) => {
+    subscribe: (parent, { showPrivate, userId }, ctx, info) => {
       return ctx.db.subscription.comment(
         {
           where: {
             node: {
-              isPublic: !isLoggedIn || !showPrivate
+              isPublic: !!userId || !showPrivate,
+              NOT: {
+                author: {
+                  id: userId
+                }
+              }
             }
           }
         },

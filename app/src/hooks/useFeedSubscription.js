@@ -1,12 +1,13 @@
 import { useSnackbar } from 'notistack';
-import { useSubscription, useQuery } from 'react-apollo';
+import { useQuery } from 'react-apollo';
 import { FEED_SUBSCRIPTION, FEED_QUERY } from '../operations';
 import { useUserQuery } from './useUserQuery';
+import { get } from 'lodash';
 
 export const useFeedSubscription = showPrivate => {
-  const { isLoggedIn } = useUserQuery();
+  const { isLoggedIn, me } = useUserQuery();
   const { enqueueSnackbar } = useSnackbar();
-  const { data, error, loading, refetch, subscribeToMore } = useQuery(FEED_QUERY, {
+  const { data, error, loading, subscribeToMore } = useQuery(FEED_QUERY, {
     variables: { showPrivate },
   });
   if (error) {
@@ -16,22 +17,29 @@ export const useFeedSubscription = showPrivate => {
   }
 
   if (!loading && data) {
-    console.log('isloggedin', isLoggedIn);
     subscribeToMore({
       document: FEED_SUBSCRIPTION,
-      variables: { showPrivate: isLoggedIn, isLoggedIn },
+      shouldResubscribe: false,
+      variables: { showPrivate: !!isLoggedIn, userId: me ? me.id : '' },
 
       updateQuery: (prev, { subscriptionData }) => {
-        console.log('got subscription in', subscriptionData);
-        if (!subscriptionData.data) {
-          return prev;
-        } else if (subscriptionData.data.feedSubscription.node.isPublic || showPrivate) {
-          console.log('refetching');
-          refetch({ showPrivate });
-        } else if (isLoggedIn) {
-          enqueueSnackbar('testing', {
-            variant: 'info',
-          });
+        if (!subscriptionData.data) return prev;
+        const mutation = get(subscriptionData, 'data.feedSubscription.mutation', '');
+        switch (mutation) {
+          case 'CREATED':
+            const newItem = get(subscriptionData, 'data.feedSubscription.node', null);
+            console.log('new item', newItem, prev);
+            if (newItem && me && me.id !== newItem.author.id && (newItem.isPublic || showPrivate)) {
+              console.log('returning');
+              return { feed: [{ ...newItem, children: [] }, ...prev.feed.filter(c => c.id !== newItem.id)] };
+            }
+            return prev;
+          case 'DELETED':
+            const deletedItem = get(subscriptionData, 'data.feedSubscription.previousValues', {});
+
+            return { feed: prev.feed.filter(c => c.id !== deletedItem.id) };
+          default:
+            return prev;
         }
       },
     });

@@ -29,6 +29,17 @@ export const CREATE_COMMENT = gql`
   mutation createComment($message: String!, $isPublic: Boolean!, $parentCommentId: ID) {
     createComment(message: $message, isPublic: $isPublic, parentCommentId: $parentCommentId) {
       id
+      message
+      isPublic
+      createdAt
+    }
+  }
+`;
+
+export const DELETE_COMMENT = gql`
+  mutation deleteComment($id: ID!) {
+    deleteComment(id: $id) {
+      id
     }
   }
 `;

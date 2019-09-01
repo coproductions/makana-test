@@ -4,10 +4,12 @@ export const FEED_QUERY = gql`
   query feed($showPrivate: Boolean!) {
     feed(showPrivate: $showPrivate) {
       id
+      isPublic
       message
       createdAt
       author {
         name
+        id
       }
       children {
         id

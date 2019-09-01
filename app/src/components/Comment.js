@@ -1,36 +1,80 @@
-import React from 'react';
+import { CardContent, colors, Typography, CardHeader, Avatar, IconButton } from '@material-ui/core';
 import { compose } from 'recompose';
-import TimeAgo from 'react-timeago';
+import { useMutation } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Typography from '@material-ui/core/Typography';
+import DeleteIcon from '@material-ui/icons/Delete';
+import React from 'react';
+import TimeAgo from 'react-timeago';
+
+import { DELETE_COMMENT, FEED_QUERY } from '../operations';
 import { useUserQuery } from '../hooks';
 
 const styles = theme => ({
   card: {
     margin: theme.spacing(2),
-    // maxWidth: 400,
+  },
+  publicAvatar: {
+    margin: 10,
+    color: 'black',
+    backgroundColor: colors.blue[50],
+  },
+  privateAvatar: {
+    margin: 10,
+    color: '#fff',
+    backgroundColor: colors.grey[900],
   },
 });
 
 const enhanced = compose(withStyles(styles));
 
-export default enhanced(({ classes, message, createdAt, author }) => {
+export default enhanced(({ classes, message, createdAt, author, id, isPublic, showPrivate }) => {
   const { me } = useUserQuery();
-  const allowDelete = me && me.id === author.id;
+  const [deleteComment, { loading }] = useMutation(DELETE_COMMENT, {
+    update: (cache, { data }) => {
+      try {
+        const { feed } = cache.readQuery({
+          query: FEED_QUERY,
+          variables: { showPrivate },
+        });
+        cache.writeQuery({
+          query: FEED_QUERY,
+          variables: { showPrivate },
+          data: {
+            feed: feed.filter(comment => comment.id !== data.deleteComment.id),
+          },
+        });
+      } catch (e) {}
+    },
+  });
+
+  const isMine = me && me.id === author.id;
 
   return (
     <Card className={classes.card}>
-      <CardActions>
-        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-          {author.name}
-        </Typography>
-        <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-          <TimeAgo date={createdAt} />
-        </Typography>
-      </CardActions>
+      <CardHeader
+        avatar={
+          <Avatar
+            className={isPublic ? classes.publicAvatar : classes.privateAvatar}
+            aria-label={author.name}
+          >
+            {author.name[0].toUpperCase()}
+          </Avatar>
+        }
+        action={
+          isMine && (
+            <IconButton
+              aria-label="delete"
+              disabled={loading}
+              onClick={() => deleteComment({ variables: { id } })}
+            >
+              <DeleteIcon />
+            </IconButton>
+          )
+        }
+        title={author.name}
+        subheader={<TimeAgo date={createdAt} />}
+      ></CardHeader>
       <CardContent>
         <Typography variant="body1">{message}</Typography>
       </CardContent>

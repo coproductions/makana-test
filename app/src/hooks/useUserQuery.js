@@ -10,7 +10,7 @@ export const useUserQuery = () => {
 
   return {
     loading: loginQuery.loading || loading,
-    isLoggedIn,
+    isLoggedIn: !loading && isLoggedIn,
     me: (data && data.me) || null,
     error: error || loginQuery.error,
   };

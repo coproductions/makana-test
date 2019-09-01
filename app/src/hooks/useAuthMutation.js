@@ -9,8 +9,9 @@ export const useAuthMutation = ({ mutation, history }) => {
 
   const [mutate, { loading }] = useMutation(mutation, {
     onError: err => enqueueSnackbar(err.message, { variant: 'error' }),
-    onCompleted: ({ login }) => {
-      localStorage.setItem(AUTH_TOKEN, login.token);
+    onCompleted: ({ login, signup }) => {
+      const token = (login && login.token) || (signup && signup.token) || '';
+      localStorage.setItem(AUTH_TOKEN, token);
       client.writeData({ data: { isLoggedIn: true } });
       history.push('/');
     },
