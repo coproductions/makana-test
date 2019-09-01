@@ -1,5 +1,14 @@
 import React, { useState, Fragment } from 'react';
-import { withStyles, colors, Paper, IconButton, Button, InputBase, Divider } from '@material-ui/core';
+import {
+  withStyles,
+  colors,
+  Paper,
+  Container,
+  IconButton,
+  Button,
+  InputBase,
+  Divider,
+} from '@material-ui/core';
 import PrivateIcon from '@material-ui/icons/VpnLock';
 import PublicIcon from '@material-ui/icons/Public';
 import { Tooltip } from '@material-ui/core';
@@ -15,7 +24,9 @@ const styles = theme => ({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    margin: theme.spacing(2),
+    borderRight: 0,
+
+    // margin: theme.spacing(2),
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -74,30 +85,32 @@ const PostComment = ({ classes, showPrivate }) => {
 
   return (
     <Fragment>
-      <Paper className={classes.paper} elevation={3}>
-        <Tooltip title={isPublic ? 'Public' : 'Private'}>
-          <IconButton
-            className={classes.iconButton}
-            onClick={() => setIsPublic(!isPublic)}
-            aria-label={isPublic ? 'Public' : 'Private'}
-          >
-            {isPublic ? <PublicIcon /> : <PrivateIcon />}
-          </IconButton>
-        </Tooltip>
+      <Container maxWidth="sm">
+        <Paper square className={classes.paper} elevation={0}>
+          <Tooltip title={isPublic ? 'Public' : 'Private'}>
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => setIsPublic(!isPublic)}
+              aria-label={isPublic ? 'Public' : 'Private'}
+            >
+              {isPublic ? <PublicIcon /> : <PrivateIcon />}
+            </IconButton>
+          </Tooltip>
 
-        <InputBase
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-          className={classes.input}
-          multiline={true}
-          rowsMax={5}
-          placeholder="Type your mind ..."
-        />
-        <Divider className={classes.divider} orientation="vertical" />
-        <Button onClick={addComment} className={classes.iconButton} disabled={!message} aria-label="post">
-          Post
-        </Button>
-      </Paper>
+          <InputBase
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            className={classes.input}
+            multiline={true}
+            rowsMax={message ? 5 : 1}
+            placeholder={`Type your mind ${me.name} ...`}
+          />
+          <Divider className={classes.divider} orientation="vertical" />
+          <Button onClick={addComment} className={classes.iconButton} disabled={!message} aria-label="post">
+            Post
+          </Button>
+        </Paper>
+      </Container>
       {loading && <Loading centered />}
     </Fragment>
   );

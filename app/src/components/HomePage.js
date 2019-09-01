@@ -1,34 +1,35 @@
 import React, { useState } from 'react';
-import { withStyles, Container, colors } from '@material-ui/core';
-import { compose } from 'recompose';
+import { Container, colors } from '@material-ui/core';
 import ListComments from './ListComments';
 import AppBar from './AppBar';
-import PostComment from './PostComment';
-import { useUserQuery, useFeedSubscription } from '../hooks';
+import { useFeedSubscription } from '../hooks';
+import { makeStyles } from '@material-ui/core/styles';
+import { useUserQuery } from '../hooks';
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   page: {
+    overflow: 'scroll',
     backgroundColor: colors.grey[200],
     height: '-webkit-fill-available',
   },
-  feedContainer: {},
-});
+  feedContainer: {
+    marginTop: ({ isLoggedIn }) => (isLoggedIn ? 140 : 80),
+  },
+}));
 
-export const HomePage = ({ classes }) => {
-  const [showPrivate, setShowPrivate] = useState(false);
+export const HomePage = () => {
   const { isLoggedIn } = useUserQuery();
+  const classes = useStyles({ isLoggedIn });
+  const [showPrivate, setShowPrivate] = useState(false);
   const { data } = useFeedSubscription(showPrivate);
   return (
-    <React.Fragment>
-      <div className={classes.page}>
-        <AppBar showPrivate={showPrivate} setShowPrivate={setShowPrivate} />
-        <Container maxWidth="sm" className={classes.feedContainer}>
-          {isLoggedIn && <PostComment showPrivate={showPrivate} />}
-          <ListComments comments={data.feed} showPrivate={showPrivate} />
-        </Container>
-      </div>
-    </React.Fragment>
+    <div className={classes.page}>
+      <AppBar showPrivate={showPrivate} setShowPrivate={setShowPrivate} />
+      <Container maxWidth="sm" className={classes.feedContainer}>
+        <ListComments comments={data.feed} showPrivate={showPrivate} />
+      </Container>
+    </div>
   );
 };
 
-export default compose(withStyles(styles))(HomePage);
+export default HomePage;

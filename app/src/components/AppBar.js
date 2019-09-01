@@ -5,16 +5,18 @@ import { AppBar, Button, Toolbar, Switch, FormControlLabel } from '@material-ui/
 import React from 'react';
 import { useUserQuery } from '../hooks';
 import { LOG_OUT } from '../operations';
+import PostComment from './PostComment';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   grow: {
     flexGrow: 1,
+  },
+  postContainer: {
+    width: '100%',
+    backgroundColor: 'white',
   },
 }));
 
@@ -28,36 +30,39 @@ const AppHeader = props => {
   };
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          {isLoggedIn && (
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={props.showPrivate}
-                  onChange={e => props.setShowPrivate(e.target.checked)}
-                  value="checkedA"
-                  inputProps={{ 'aria-label': 'secondary checkbox' }}
-                />
-              }
-              label="Private mode"
-            />
-          )}
-          <div className={classes.grow}></div>
-          {isLoggedIn && (
-            <Button color="inherit" onClick={logout}>
-              Logout
-            </Button>
-          )}
-          {!isLoggedIn && (
-            <Button color="inherit" onClick={toLogin}>
-              Sign in
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar position="absolute">
+      <Toolbar>
+        {isLoggedIn && (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={props.showPrivate}
+                onChange={e => props.setShowPrivate(e.target.checked)}
+                value="checkedA"
+                inputProps={{ 'aria-label': 'secondary checkbox' }}
+              />
+            }
+            label="Private mode"
+          />
+        )}
+        <div className={classes.grow}></div>
+        {isLoggedIn && (
+          <Button color="inherit" onClick={logout}>
+            Logout
+          </Button>
+        )}
+        {!isLoggedIn && (
+          <Button color="inherit" onClick={toLogin}>
+            Sign in
+          </Button>
+        )}
+      </Toolbar>
+      {isLoggedIn && (
+        <div className={classes.postContainer}>
+          <PostComment showPrivate={props.showPrivate} />
+        </div>
+      )}
+    </AppBar>
   );
 };
 
