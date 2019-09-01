@@ -10,6 +10,7 @@ import Replies from './Replies';
 import { DELETE_COMMENT, FEED_QUERY } from '../operations';
 import { useUserQuery } from '../hooks';
 import Loading from './Loading';
+import { useErrorHandler } from '../hooks';
 
 const styles = theme => ({
   card: {
@@ -37,7 +38,7 @@ const enhanced = compose(withStyles(styles));
 export default enhanced(({ classes, message, createdAt, author, id, isPublic, showPrivate, children }) => {
   const { me } = useUserQuery();
   const [expandComments, setExpandComments] = useState(false);
-  const [deleteComment, { loading }] = useMutation(DELETE_COMMENT, {
+  const [deleteComment, { loading, error }] = useMutation(DELETE_COMMENT, {
     update: (cache, { data }) => {
       try {
         const { feed } = cache.readQuery({
@@ -54,6 +55,7 @@ export default enhanced(({ classes, message, createdAt, author, id, isPublic, sh
       } catch (e) {}
     },
   });
+  useErrorHandler(error);
 
   const isMine = me && me.id === author.id;
 

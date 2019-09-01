@@ -15,7 +15,7 @@ import { Tooltip } from '@material-ui/core';
 import { useMutation } from 'react-apollo';
 import { compose } from 'recompose';
 import { CREATE_COMMENT, FEED_QUERY } from '../operations';
-import { useUserQuery } from '../hooks';
+import { useUserQuery, useErrorHandler } from '../hooks';
 import Loading from './Loading';
 import { useSnackbar } from 'notistack';
 
@@ -53,7 +53,7 @@ const PostComment = ({ classes, showPrivate }) => {
   const [message, setMessage] = useState('');
   const { me } = useUserQuery();
   const { enqueueSnackbar } = useSnackbar();
-  const [createComment, { loading }] = useMutation(CREATE_COMMENT, {
+  const [createComment, { loading, error }] = useMutation(CREATE_COMMENT, {
     onCompleted: () => setMessage(''),
     update: (cache, { data }) => {
       let updatePrivate = false;
@@ -80,7 +80,7 @@ const PostComment = ({ classes, showPrivate }) => {
       } catch (e) {}
     },
   });
-
+  useErrorHandler(error);
   const addComment = () => createComment({ variables: { message, isPublic } });
 
   return (

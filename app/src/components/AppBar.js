@@ -3,7 +3,7 @@ import { useMutation } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 import { AppBar, Button, Toolbar, Switch, FormControlLabel } from '@material-ui/core';
 import React from 'react';
-import { useUserQuery } from '../hooks';
+import { useUserQuery, useErrorHandler } from '../hooks';
 import { LOG_OUT } from '../operations';
 import PostComment from './PostComment';
 
@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
 const AppHeader = props => {
   const classes = useStyles();
   const { isLoggedIn } = useUserQuery();
-  const [logout] = useMutation(LOG_OUT);
+  const [logout, { error }] = useMutation(LOG_OUT);
+  useErrorHandler(error);
 
   const toLogin = () => {
     props.history.push('/login');

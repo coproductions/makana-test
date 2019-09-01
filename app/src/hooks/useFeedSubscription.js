@@ -1,24 +1,17 @@
 import { get } from 'lodash';
 import { useQuery } from 'react-apollo';
 import { useRef, useEffect } from 'react';
-import { useSnackbar } from 'notistack';
 
 import { FEED_SUBSCRIPTION, FEED_QUERY } from '../operations';
-import { useUserQuery } from './useUserQuery';
+import { useUserQuery, useErrorHandler } from '../hooks';
 
 export const useFeedSubscription = showPrivate => {
   const ref = useRef(null);
   const { isLoggedIn, me } = useUserQuery();
-  const { enqueueSnackbar } = useSnackbar();
   const { data, error, loading, subscribeToMore } = useQuery(FEED_QUERY, {
     variables: { showPrivate },
   });
-  if (error) {
-    enqueueSnackbar(error.message, {
-      variant: 'error',
-    });
-  }
-
+  useErrorHandler(error);
   useEffect(() => {
     if (!loading && data) {
       if (ref.current) {

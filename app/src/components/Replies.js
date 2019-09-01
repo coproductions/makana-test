@@ -5,7 +5,7 @@ import PostReply from './PostReply';
 import Reply from './Reply';
 import { COMMENT_QUERY } from '../operations';
 import { useQuery } from 'react-apollo';
-import { useUserQuery } from '../hooks';
+import { useUserQuery, useErrorHandler } from '../hooks';
 
 const useStyles = makeStyles(theme => ({
   replies: {
@@ -20,10 +20,12 @@ const Replies = props => {
   const {
     data: { comment },
     loading,
-    // error,
+    error,
   } = useQuery(COMMENT_QUERY, {
     variables: { id: props.id },
   });
+  useErrorHandler(error);
+
   return (
     <div className={classes.replies}>
       {isLoggedIn && <PostReply {...props} loading={loading} />}

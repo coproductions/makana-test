@@ -2,7 +2,7 @@ import React, { useState, Fragment } from 'react';
 import { colors, Paper, Button, InputBase, Divider } from '@material-ui/core';
 import { useMutation } from 'react-apollo';
 import { CREATE_COMMENT, COMMENT_QUERY } from '../operations';
-import { useUserQuery } from '../hooks';
+import { useUserQuery, useErrorHandler } from '../hooks';
 import Loading from './Loading';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -40,7 +40,7 @@ const PostReply = props => {
 
   const [message, setMessage] = useState('');
   const { me } = useUserQuery();
-  const [createComment, { loading }] = useMutation(CREATE_COMMENT, {
+  const [createComment, { loading, error }] = useMutation(CREATE_COMMENT, {
     onCompleted: () => setMessage(''),
     update: (cache, { data }) => {
       try {
@@ -58,6 +58,7 @@ const PostReply = props => {
       } catch (e) {}
     },
   });
+  useErrorHandler(error);
 
   const addComment = () =>
     createComment({ variables: { message, isPublic: props.isPublic, parentCommentId: props.id } });

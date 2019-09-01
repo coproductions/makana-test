@@ -1,5 +1,6 @@
 import { useMutation, useApolloClient } from 'react-apollo';
 import { useSnackbar } from 'notistack';
+import { useErrorHandler } from '../hooks';
 
 import { AUTH_TOKEN } from '../constants';
 
@@ -7,7 +8,7 @@ export const useAuthMutation = ({ mutation, history }) => {
   const client = useApolloClient();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [mutate, { loading }] = useMutation(mutation, {
+  const [mutate, { loading, error }] = useMutation(mutation, {
     onError: err => enqueueSnackbar(err.message, { variant: 'error' }),
     onCompleted: ({ login, signup }) => {
       const token = (login && login.token) || (signup && signup.token) || '';
@@ -16,6 +17,7 @@ export const useAuthMutation = ({ mutation, history }) => {
       history.push('/');
     },
   });
+  useErrorHandler(error);
 
   return [mutate, loading];
 };
