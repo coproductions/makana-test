@@ -9,6 +9,9 @@ export const FEED_SUBSCRIPTION = gql`
         isPublic
         message
         createdAt
+        parent {
+          id
+        }
         author {
           id
           name

@@ -1,18 +1,10 @@
 const Subscription = {
   feedSubscription: {
     subscribe: (parent, { showPrivate, userId }, ctx, info) => {
+      const where = !userId ? { isPublic: true } : null;
       return ctx.db.subscription.comment(
         {
-          where: {
-            node: {
-              // isPublic: !!userId || !showPrivate,
-              NOT: {
-                author: {
-                  id: userId
-                }
-              }
-            }
-          }
+          where
         },
         info
       );
