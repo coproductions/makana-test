@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, colors, Typography, Avatar } from '@material-ui/core';
+import { Container, colors, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import TimeAgo from 'react-timeago';
 import { Tooltip } from '@material-ui/core';

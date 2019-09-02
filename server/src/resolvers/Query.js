@@ -34,7 +34,10 @@ const Query = {
   },
 
   me(parent, args, ctx, info) {
-    const id = getUserId(ctx);
+    const id = getUserIdOptional(ctx);
+    if (id === -1) {
+      return null;
+    }
     return ctx.db.query.user({ where: { id } }, info);
   }
 };

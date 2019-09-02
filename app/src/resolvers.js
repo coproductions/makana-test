@@ -16,7 +16,6 @@ export const resolvers = {
         data: { isLoggedIn: false },
       });
       localStorage.removeItem(AUTH_TOKEN);
-
       client.resetStore();
 
       return null;

@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ColorPicker = () => {
+const ColorPicker = ({ closeModal }) => {
   const classes = useStyles();
   const [selected, setSelected] = useState(null);
   const { me } = useUserQuery();
@@ -46,6 +46,7 @@ const ColorPicker = () => {
         });
       } catch (e) {}
     },
+    onCompleted: closeModal,
   });
   useErrorHandler(error);
 

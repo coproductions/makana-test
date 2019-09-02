@@ -1,4 +1,4 @@
-import { CardContent, Collapse, colors, Typography, CardHeader, Avatar, IconButton } from '@material-ui/core';
+import { CardContent, Collapse, colors, Typography, CardHeader, IconButton } from '@material-ui/core';
 import { compose } from 'recompose';
 import { useMutation } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';

@@ -10,6 +10,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import { AUTH_TOKEN } from '../constants';
 import { resolvers, typeDefs } from '../resolvers';
+import { IS_LOGGED_IN } from '../operations';
 
 // TODO: via env configs
 const WS_URL = 'ws://localhost:4000';
@@ -43,10 +44,9 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
         // error code is set to UNAUTHENTICATED
         // when AuthenticationError thrown in resolver
         localStorage.removeItem(AUTH_TOKEN);
-        cache.writeData({
-          data: {
-            isLoggedIn: false,
-          },
+        cache.writeQuery({
+          query: IS_LOGGED_IN,
+          data: { isLoggedIn: false },
         });
         const oldHeaders = operation.getContext().headers;
         operation.setContext({
@@ -77,9 +77,14 @@ const link = ApolloLink.from([authLink, errorLink, splitLink]);
 
 const client = new ApolloClient({ link, cache, typeDefs, resolvers });
 
-client.writeData({
-  data: {
-    isLoggedIn: !!localStorage.getItem(AUTH_TOKEN),
-  },
-});
+const addLoggedInField = () =>
+  client.writeData({
+    data: {
+      isLoggedIn: !!localStorage.getItem(AUTH_TOKEN),
+    },
+  });
+
+client.onResetStore(addLoggedInField);
+addLoggedInField();
+
 export default ({ children }) => <ApolloProvider client={client}>{children}</ApolloProvider>;

@@ -7,7 +7,7 @@ class ColorAvatar extends React.Component {
   render() {
     return (
       <Avatar className={this.props.className || ''} style={{ background: this.props.profileColor }}>
-        {this.props.name[0].toUpperCase()}
+        {this.props.name && this.props.name[0].toUpperCase()}
       </Avatar>
     );
   }

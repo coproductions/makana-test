@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar, Menu, MenuItem, IconButton } from '@material-ui/core';
+import { Menu, MenuItem, IconButton } from '@material-ui/core';
 import { useUserQuery } from '../hooks';
 import { useMutation } from 'react-apollo';
 import { LOG_OUT } from '../operations';
@@ -23,6 +23,11 @@ const AppBarMenu = () => {
     setAnchorEl(null);
   };
 
+  const closeModal = () => {
+    setShowColorPicker(false);
+    handleClose();
+  };
+
   return (
     <div>
       <IconButton onClick={handleClick}>
@@ -30,10 +35,17 @@ const AppBarMenu = () => {
       </IconButton>
       <Menu id="profile-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={() => setShowColorPicker(true)}>Profile</MenuItem>
-        <MenuItem onClick={logout}>Logout</MenuItem>
+        <MenuItem
+          onClick={() => {
+            logout();
+            handleClose();
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
-      <SpringModal open={showColorPicker} handleClose={() => setShowColorPicker(false)}>
-        <ColorPicker />
+      <SpringModal open={showColorPicker} handleClose={closeModal}>
+        <ColorPicker closeModal={closeModal} />
       </SpringModal>
     </div>
   );
