@@ -24,6 +24,7 @@ export const GET_USER = gql`
       name
       email
       id
+      profileColor
     }
   }
 `;

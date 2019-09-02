@@ -43,3 +43,12 @@ export const DELETE_COMMENT = gql`
     }
   }
 `;
+
+export const UPDATE_COLOR = gql`
+  mutation updateClor($id: ID!, $profileColor: String!) {
+    updateColor(id: $id, profileColor: $profileColor) {
+      id
+      profileColor
+    }
+  }
+`;

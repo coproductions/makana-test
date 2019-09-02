@@ -9,6 +9,7 @@ type Query {
 type Mutation {
   signup(email: String!, password: String!, name: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
+  updateColor(id: ID!, profileColor: String!): User!
   createComment(
     message: String!
     isPublic: Boolean!
@@ -35,4 +36,5 @@ type User {
   email: String!
   name: String!
   comments: [Comment!]!
+  profileColor: String
 }
