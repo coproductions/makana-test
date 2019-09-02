@@ -29,7 +29,11 @@ export const useFeedSubscription = showPrivate => {
           switch (mutation) {
             case 'CREATED':
               const newItem = get(subscriptionData, 'data.feedSubscription.node', null);
-              if (newItem.parent && newItem.author.id !== userId) {
+              if (!newItem && userId === newItem.author.id) {
+                // new items by this user are handled elsewhere
+                return prev;
+              }
+              if (newItem.parent) {
                 // it's a comment
                 try {
                   const { comment } = client.readQuery({
@@ -50,13 +54,27 @@ export const useFeedSubscription = showPrivate => {
                     c.id === newItem.parent.id ? { ...c, children: [newItem, ...c.children] } : c
                   ),
                 };
-              }
-              if (newItem && userId !== newItem.author.id && (newItem.isPublic || showPrivate)) {
-                return {
+              } else {
+                const updatedFeedData = {
                   feed: [{ ...newItem, children: [] }, ...prev.feed.filter(c => c.id !== newItem.id)],
                 };
+                // it's a post update the private feed
+                client.writeQuery({
+                  query: FEED_QUERY,
+                  variables: { showPrivate: true },
+                  data: updatedFeedData,
+                });
+
+                if (newItem.isPublic) {
+                  // it's public update the public feed
+                  client.writeQuery({
+                    query: FEED_QUERY,
+                    variables: { showPrivate: false },
+                    data: updatedFeedData,
+                  });
+                }
+                return showPrivate || newItem.isPublic ? updatedFeedData : prev;
               }
-              return prev;
             case 'DELETED':
               const deletedItem = get(subscriptionData, 'data.feedSubscription.previousValues', {});
 

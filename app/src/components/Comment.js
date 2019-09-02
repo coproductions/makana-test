@@ -4,6 +4,8 @@ import { useMutation } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import DeleteIcon from '@material-ui/icons/Delete';
+import PrivateIcon from '@material-ui/icons/VisibilityOff';
+
 import React, { Fragment, useState } from 'react';
 import TimeAgo from 'react-timeago';
 import Replies from './Replies';
@@ -34,15 +36,18 @@ const styles = theme => ({
     paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(4),
   },
-  deleteButton: {
+  icons: {
     marginTop: theme.spacing(2),
+  },
+  action: {
+    display: 'flex',
   },
 });
 
 const enhanced = compose(withStyles(styles));
 
 export default enhanced(({ classes, message, createdAt, author, id, isPublic, showPrivate, children }) => {
-  const { me } = useUserQuery();
+  const { userId } = useUserQuery();
   const [expandComments, setExpandComments] = useState(false);
   const [deleteComment, { loading, error }] = useMutation(DELETE_COMMENT, {
     update: (cache, { data }) => {
@@ -63,7 +68,25 @@ export default enhanced(({ classes, message, createdAt, author, id, isPublic, sh
   });
   useErrorHandler(error);
 
-  const isMine = me && me.id === author.id;
+  const isMine = userId === author.id;
+  const action = (
+    <div>
+      {!isPublic && (
+        <IconButton className={classes.icons} aria-label="hidden">
+          <PrivateIcon fontSize="small" />
+        </IconButton>
+      )}
+      <IconButton
+        style={{ visibility: isMine ? 'inherit' : 'hidden' }}
+        className={classes.icons}
+        aria-label="delete"
+        disabled={!isMine || loading}
+        onClick={() => deleteComment({ variables: { id } })}
+      >
+        <DeleteIcon fontSize="small" />
+      </IconButton>
+    </div>
+  );
 
   return (
     <Card className={classes.card}>
@@ -74,18 +97,7 @@ export default enhanced(({ classes, message, createdAt, author, id, isPublic, sh
           <CardHeader
             className={classes.header}
             avatar={<ColorAvatar {...author} className={classes.avatar} />}
-            action={
-              isMine && (
-                <IconButton
-                  className={classes.deleteButton}
-                  aria-label="delete"
-                  disabled={loading}
-                  onClick={() => deleteComment({ variables: { id } })}
-                >
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              )
-            }
+            action={action}
             title={author.name}
             subheader={<TimeAgo date={createdAt} />}
           ></CardHeader>

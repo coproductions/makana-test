@@ -6,6 +6,7 @@ import { useUserQuery } from '../hooks';
 import { UPDATE_COLOR, GET_USER } from '../operations';
 import { useMutation } from 'react-apollo';
 import { useErrorHandler } from '../hooks';
+import Loading from './Loading';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -35,7 +36,7 @@ const ColorPicker = ({ closeModal }) => {
   const classes = useStyles();
   const [selected, setSelected] = useState(null);
   const { me } = useUserQuery();
-  const [updateColor, { error }] = useMutation(UPDATE_COLOR, {
+  const [updateColor, { error, loading }] = useMutation(UPDATE_COLOR, {
     update: (cache, { data }) => {
       try {
         cache.writeQuery({
@@ -57,8 +58,8 @@ const ColorPicker = ({ closeModal }) => {
     <Container className={classes.container}>
       <Avatar style={{ background: selected }}>{me && me.name[0].toUpperCase()}</Avatar>
       <CirclePicker onChangeComplete={handleChangeComplete} />
-      <Button onClick={handleConfirm} variant="contained" className={classes.button}>
-        Confirm
+      <Button disabled={loading} onClick={handleConfirm} variant="contained" className={classes.button}>
+        {loading ? <Loading centered size={20} /> : 'Confirm'}
       </Button>
     </Container>
   );

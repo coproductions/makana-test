@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default ({ centered, padding }) => {
+export default ({ centered, padding, size }) => {
   const classes = useStyles({ padding, centered });
 
   return (
@@ -23,7 +23,7 @@ export default ({ centered, padding }) => {
         [classes.centered]: centered,
       })}
     >
-      <CircularProgress />
+      <CircularProgress size={size} />
     </div>
   );
 };
