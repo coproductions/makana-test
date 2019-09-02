@@ -1,11 +1,16 @@
-import { makeStyles } from '@material-ui/core/styles';
-import { useMutation } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
-import { AppBar, Button, Toolbar, Switch, FormControlLabel } from '@material-ui/core';
+import {
+  AppBar,
+  Button,
+  Toolbar,
+  Switch,
+  makeStyles,
+  FormControlLabel,
+} from '@material-ui/core';
 import React from 'react';
-import { useUserQuery, useErrorHandler } from '../hooks';
-import { LOG_OUT } from '../operations';
+import { useUserQuery } from '../hooks';
 import PostComment from './PostComment';
+import AppBarMenu from './AppBarMenu';
 
 const useStyles = makeStyles(theme => ({
   menuButton: {
@@ -23,8 +28,6 @@ const useStyles = makeStyles(theme => ({
 const AppHeader = props => {
   const classes = useStyles();
   const { isLoggedIn } = useUserQuery();
-  const [logout, { error }] = useMutation(LOG_OUT);
-  useErrorHandler(error);
 
   const toLogin = () => {
     props.history.push('/login');
@@ -47,11 +50,7 @@ const AppHeader = props => {
           />
         )}
         <div className={classes.grow}></div>
-        {isLoggedIn && (
-          <Button color="inherit" onClick={logout}>
-            Logout
-          </Button>
-        )}
+        {isLoggedIn && <AppBarMenu />}
         {!isLoggedIn && (
           <Button color="inherit" onClick={toLogin}>
             Sign in
