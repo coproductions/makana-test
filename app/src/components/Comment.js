@@ -11,20 +11,14 @@ import { DELETE_COMMENT, FEED_QUERY } from '../operations';
 import { useUserQuery } from '../hooks';
 import Loading from './Loading';
 import { useErrorHandler } from '../hooks';
+import ColorAvatar from './ColorAvatar';
 
 const styles = theme => ({
   card: {
     margin: theme.spacing(2),
   },
-  publicAvatar: {
+  avatar: {
     margin: 10,
-    color: 'black',
-    backgroundColor: colors.blue[50],
-  },
-  privateAvatar: {
-    margin: 10,
-    color: '#fff',
-    backgroundColor: colors.grey[900],
   },
   bottomNav: {
     display: 'flex',
@@ -79,14 +73,7 @@ export default enhanced(({ classes, message, createdAt, author, id, isPublic, sh
         <Fragment>
           <CardHeader
             className={classes.header}
-            avatar={
-              <Avatar
-                className={isPublic ? classes.publicAvatar : classes.privateAvatar}
-                aria-label={author.name}
-              >
-                {author.name[0].toUpperCase()}
-              </Avatar>
-            }
+            avatar={<ColorAvatar {...author} className={classes.avatar} />}
             action={
               isMine && (
                 <IconButton

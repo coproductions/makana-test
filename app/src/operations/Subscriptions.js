@@ -13,6 +13,7 @@ export const FEED_SUBSCRIPTION = gql`
           id
         }
         author {
+          profileColor
           id
           name
         }

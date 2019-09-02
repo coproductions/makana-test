@@ -3,6 +3,7 @@ import { Container, colors, Typography, Avatar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import TimeAgo from 'react-timeago';
 import { Tooltip } from '@material-ui/core';
+import ColorAvatar from './ColorAvatar';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -14,6 +15,7 @@ const useStyles = makeStyles(theme => ({
     margin: 10,
     width: 20,
     height: 20,
+    fontSize: '1rem',
   },
   time: {
     color: colors.grey[600],
@@ -27,7 +29,7 @@ const Reply = ({ author, message, createdAt }) => {
   return (
     <Container className={classes.container}>
       <Tooltip title={author.name}>
-        <Avatar className={classes.avatar}>{author.name[0]}</Avatar>
+        <ColorAvatar {...author} className={classes.avatar} />
       </Tooltip>
 
       <Typography className={classes.time} variant="caption">

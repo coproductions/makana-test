@@ -6,6 +6,7 @@ import { LOG_OUT } from '../operations';
 import { useErrorHandler } from '../hooks';
 import SpringModal from './SpringModal';
 import ColorPicker from './ColorPicker';
+import ColorAvatar from './ColorAvatar';
 
 const AppBarMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -25,7 +26,7 @@ const AppBarMenu = () => {
   return (
     <div>
       <IconButton onClick={handleClick}>
-        <Avatar>{me.name[0].toUpperCase()}</Avatar>
+        <ColorAvatar {...me} />
       </IconButton>
       <Menu id="profile-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={() => setShowColorPicker(true)}>Profile</MenuItem>

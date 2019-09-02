@@ -10,6 +10,7 @@ export const FEED_QUERY = gql`
       author {
         name
         id
+        profileColor
       }
       children {
         id
@@ -45,6 +46,7 @@ export const COMMENT_QUERY = gql`
       author {
         name
         id
+        profileColor
       }
       children {
         id
@@ -53,6 +55,7 @@ export const COMMENT_QUERY = gql`
         author {
           name
           id
+          profileColor
         }
       }
     }
