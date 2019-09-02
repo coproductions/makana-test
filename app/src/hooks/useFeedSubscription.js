@@ -29,7 +29,7 @@ export const useFeedSubscription = showPrivate => {
           switch (mutation) {
             case 'CREATED':
               const newItem = get(subscriptionData, 'data.feedSubscription.node', null);
-              if (!newItem && userId === newItem.author.id) {
+              if (!newItem || userId === newItem.author.id) {
                 // new items by this user are handled elsewhere
                 return prev;
               }
