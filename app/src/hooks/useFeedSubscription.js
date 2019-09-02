@@ -29,7 +29,6 @@ export const useFeedSubscription = showPrivate => {
           switch (mutation) {
             case 'CREATED':
               const newItem = get(subscriptionData, 'data.feedSubscription.node', null);
-              console.log('got new item', newItem);
               if (newItem.parent && newItem.author.id !== userId) {
                 // it's a comment
                 try {
@@ -53,7 +52,6 @@ export const useFeedSubscription = showPrivate => {
                 };
               }
               if (newItem && userId !== newItem.author.id && (newItem.isPublic || showPrivate)) {
-                console.log('in here');
                 return {
                   feed: [{ ...newItem, children: [] }, ...prev.feed.filter(c => c.id !== newItem.id)],
                 };
