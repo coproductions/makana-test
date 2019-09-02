@@ -82,6 +82,14 @@ const feed = ({ showPrivate }) => `
         }
     }`;
 
+const updateColor = ({ id, profileColor }) => `
+    mutation {
+        updateColor(id: "${id}", profileColor: "${profileColor}"){
+           id
+           profileColor
+        }
+    }`;
+
 module.exports = {
   createComment,
   comment,
@@ -90,5 +98,6 @@ module.exports = {
   signup,
   login,
   me,
-  feed
+  feed,
+  updateColor
 };
