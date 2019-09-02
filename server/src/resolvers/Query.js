@@ -34,10 +34,12 @@ const Query = {
   },
 
   me(parent, args, ctx, info) {
-    const id = getUserIdOptional(ctx);
-    if (id === -1) {
-      return null;
-    }
+    // const id = getUserIdOptional(ctx);
+    // if (id === -1) {
+    //   return null;
+    // }
+    const id = getUserId(ctx);
+
     return ctx.db.query.user({ where: { id } }, info);
   }
 };

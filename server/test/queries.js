@@ -72,9 +72,9 @@ const me = `
         }
     }`;
 
-const feed = `
-    {
-       feed {
+const feed = ({ showPrivate }) => `
+  query {
+    feed(showPrivate: ${showPrivate}) {
             id
             message
             createdAt

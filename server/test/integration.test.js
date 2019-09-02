@@ -248,7 +248,7 @@ describe('API Integration', () => {
 
   describe('Feed', () => {
     it('can fetch public comment list anonymously', done => {
-      const query = queries.feed;
+      const query = queries.feed({ showPrivate: false });
 
       queryTest(query).end((err, res) => {
         if (err) return done(err);
@@ -265,7 +265,7 @@ describe('API Integration', () => {
     });
 
     it('can see private comments when logged in', done => {
-      const query = queries.feed;
+      const query = queries.feed({ showPrivate: true });
 
       queryTest(query, token).end((err, res) => {
         if (err) return done(err);
