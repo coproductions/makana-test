@@ -14,6 +14,7 @@ import { useUserQuery } from '../hooks';
 import Loading from './Loading';
 import { useErrorHandler } from '../hooks';
 import ColorAvatar from './ColorAvatar';
+import Fade from './Fade';
 
 const styles = theme => ({
   card: {
@@ -115,7 +116,9 @@ export default enhanced(({ classes, message, createdAt, author, id, isPublic, sh
             >{`${children.length} replies`}</Typography>
           </div>
           {expandComments && (
-            <Replies {...{ classes, message, createdAt, author, id, isPublic, showPrivate, children }} />
+            <Fade in={expandComments}>
+              <Replies {...{ classes, message, createdAt, author, id, isPublic, showPrivate, children }} />
+            </Fade>
           )}
         </Collapse>
       )}
