@@ -17,7 +17,7 @@ export const useUserQuery = () => {
 
   return {
     loading: loginQuery.loading || loading,
-    isLoggedIn: !loading && isLoggedIn,
+    isLoggedIn: !loading && isLoggedIn && data && data.me,
     me: (data && data.me) || null,
     userId: (data && data.me && data.me.id) || '',
     error: combinedError,
