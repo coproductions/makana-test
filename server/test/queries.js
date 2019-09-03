@@ -84,7 +84,7 @@ const feed = ({ showPrivate }) => `
 
 const updateColor = ({ id, profileColor }) => `
     mutation {
-        updateColor(id: "${id}", profileColor: "${profileColor}"){
+        updateColor(profileColor: "${profileColor}"){
            id
            profileColor
         }

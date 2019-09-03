@@ -45,8 +45,8 @@ export const DELETE_COMMENT = gql`
 `;
 
 export const UPDATE_COLOR = gql`
-  mutation updateColor($id: ID!, $profileColor: String!) {
-    updateColor(id: $id, profileColor: $profileColor) {
+  mutation updateColor($profileColor: String!) {
+    updateColor(profileColor: $profileColor) {
       id
       profileColor
     }
