@@ -1,0 +1,7 @@
+{
+    "prettier.printWidth": 120,
+    "beautify.ignore": [
+        "**/*.js",
+        "**/*.jsx"
+    ]
+}

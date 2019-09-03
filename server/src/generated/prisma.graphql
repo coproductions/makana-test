@@ -1,5 +1,5 @@
-# source: https://us1.prisma.sh/public-brassbolt-537/makana-rpt-ui/dev
-# timestamp: Wed Apr 24 2019 08:21:20 GMT-0600 (Mountain Daylight Time)
+# source: https://us1.prisma.sh/public-sequoiaseed-189/makana-rpt-ui/dev
+# timestamp: Mon Sep 02 2019 04:22:31 GMT-0700 (Pacific Daylight Time)
 
 type AggregateComment {
   count: Int!
@@ -619,6 +619,7 @@ type User implements Node {
   password: String!
   name: String!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
+  profileColor: String
 }
 
 """A connection to a list of items."""
@@ -636,6 +637,7 @@ input UserCreateInput {
   email: String!
   password: String!
   name: String!
+  profileColor: String
   comments: CommentCreateManyWithoutAuthorInput
 }
 
@@ -649,6 +651,7 @@ input UserCreateWithoutCommentsInput {
   email: String!
   password: String!
   name: String!
+  profileColor: String
 }
 
 """An edge in a connection."""
@@ -669,6 +672,8 @@ enum UserOrderByInput {
   password_DESC
   name_ASC
   name_DESC
+  profileColor_ASC
+  profileColor_DESC
 }
 
 type UserPreviousValues {
@@ -676,6 +681,7 @@ type UserPreviousValues {
   email: String!
   password: String!
   name: String!
+  profileColor: String
 }
 
 type UserSubscriptionPayload {
@@ -721,6 +727,7 @@ input UserUpdateInput {
   email: String
   password: String
   name: String
+  profileColor: String
   comments: CommentUpdateManyWithoutAuthorInput
 }
 
@@ -728,6 +735,7 @@ input UserUpdateManyMutationInput {
   email: String
   password: String
   name: String
+  profileColor: String
 }
 
 input UserUpdateOneRequiredWithoutCommentsInput {
@@ -741,6 +749,7 @@ input UserUpdateWithoutCommentsDataInput {
   email: String
   password: String
   name: String
+  profileColor: String
 }
 
 input UserUpsertWithoutCommentsInput {
@@ -917,6 +926,46 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  profileColor: String
+
+  """All values that are not equal to given value."""
+  profileColor_not: String
+
+  """All values that are contained in given list."""
+  profileColor_in: [String!]
+
+  """All values that are not contained in given list."""
+  profileColor_not_in: [String!]
+
+  """All values less than the given value."""
+  profileColor_lt: String
+
+  """All values less than or equal the given value."""
+  profileColor_lte: String
+
+  """All values greater than the given value."""
+  profileColor_gt: String
+
+  """All values greater than or equal the given value."""
+  profileColor_gte: String
+
+  """All values containing the given string."""
+  profileColor_contains: String
+
+  """All values not containing the given string."""
+  profileColor_not_contains: String
+
+  """All values starting with the given string."""
+  profileColor_starts_with: String
+
+  """All values not starting with the given string."""
+  profileColor_not_starts_with: String
+
+  """All values ending with the given string."""
+  profileColor_ends_with: String
+
+  """All values not ending with the given string."""
+  profileColor_not_ends_with: String
   comments_every: CommentWhereInput
   comments_some: CommentWhereInput
   comments_none: CommentWhereInput

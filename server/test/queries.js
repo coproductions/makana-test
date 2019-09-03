@@ -72,13 +72,21 @@ const me = `
         }
     }`;
 
-const feed = `
-    {
-       feed {
+const feed = ({ showPrivate }) => `
+  query {
+    feed(showPrivate: ${showPrivate}) {
             id
             message
             createdAt
             isPublic
+        }
+    }`;
+
+const updateColor = ({ id, profileColor }) => `
+    mutation {
+        updateColor(id: "${id}", profileColor: "${profileColor}"){
+           id
+           profileColor
         }
     }`;
 
@@ -90,5 +98,6 @@ module.exports = {
   signup,
   login,
   me,
-  feed
+  feed,
+  updateColor
 };

@@ -1,11 +1,11 @@
 const { getUserId, getUserIdOptional, AuthError } = require('../utils');
 
 const Query = {
-  feed(parent, args, ctx, info) {
+  feed(parent, { showPrivate }, ctx, info) {
     const userId = getUserIdOptional(ctx);
 
     const where =
-      userId === -1
+      userId === -1 || !showPrivate
         ? { AND: [{ isPublic: true }, { parent: null }] }
         : { parent: null };
 
@@ -34,7 +34,12 @@ const Query = {
   },
 
   me(parent, args, ctx, info) {
+    // const id = getUserIdOptional(ctx);
+    // if (id === -1) {
+    //   return null;
+    // }
     const id = getUserId(ctx);
+
     return ctx.db.query.user({ where: { id } }, info);
   }
 };

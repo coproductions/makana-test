@@ -1,7 +1,7 @@
 # import * from "./generated/prisma.graphql"
 
 type Query {
-  feed: [Comment!]!
+  feed(showPrivate: Boolean!): [Comment!]!
   comment(id: ID!): Comment
   me: User
 }
@@ -9,6 +9,7 @@ type Query {
 type Mutation {
   signup(email: String!, password: String!, name: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
+  updateColor(id: ID!, profileColor: String!): User!
   createComment(
     message: String!
     isPublic: Boolean!
@@ -19,7 +20,10 @@ type Mutation {
 }
 
 type Subscription {
-  feedSubscription: CommentSubscriptionPayload
+  feedSubscription(
+    showPrivate: Boolean!
+    userId: String!
+  ): CommentSubscriptionPayload
 }
 
 type AuthPayload {
@@ -32,4 +36,5 @@ type User {
   email: String!
   name: String!
   comments: [Comment!]!
+  profileColor: String
 }

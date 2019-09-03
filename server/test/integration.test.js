@@ -165,6 +165,21 @@ describe('API Integration', () => {
 
       it.skip('can not edit bogus comment', () => {});
       it.skip("can not another author's comment", () => {});
+
+      it('can update profile color', done => {
+        const testColor = 'red';
+        const query = queries.updateColor({
+          id: user.id,
+          profileColor: testColor
+        });
+
+        queryTest(query, token).end((err, res) => {
+          if (err) return done(err);
+          expect(res.body.data.updateColor.profileColor).to.equal(testColor);
+          expect(res.body.data.updateColor.id).to.equal(user.id);
+          done();
+        });
+      });
     });
 
     describe('Anonymous', () => {
@@ -248,7 +263,7 @@ describe('API Integration', () => {
 
   describe('Feed', () => {
     it('can fetch public comment list anonymously', done => {
-      const query = queries.feed;
+      const query = queries.feed({ showPrivate: false });
 
       queryTest(query).end((err, res) => {
         if (err) return done(err);
@@ -265,7 +280,7 @@ describe('API Integration', () => {
     });
 
     it('can see private comments when logged in', done => {
-      const query = queries.feed;
+      const query = queries.feed({ showPrivate: true });
 
       queryTest(query, token).end((err, res) => {
         if (err) return done(err);
@@ -325,5 +340,6 @@ describe('API Integration', () => {
       it.skip('cascading delete down all threads', done => {});
     });
   });
+
   describe.skip('Subscriptions', () => {});
 });
