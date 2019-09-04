@@ -169,14 +169,12 @@ describe('API Integration', () => {
       it('can update profile color', done => {
         const testColor = 'red';
         const query = queries.updateColor({
-          id: user.id,
           profileColor: testColor
         });
 
         queryTest(query, token).end((err, res) => {
           if (err) return done(err);
           expect(res.body.data.updateColor.profileColor).to.equal(testColor);
-          expect(res.body.data.updateColor.id).to.equal(user.id);
           done();
         });
       });

@@ -51,7 +51,7 @@ const ColorPicker = ({ closeModal }) => {
   });
   useErrorHandler(error);
 
-  const handleConfirm = () => updateColor({ variables: { id: me.id, profileColor: selected } });
+  const handleConfirm = () => updateColor({ variables: { profileColor: selected } });
   const handleChangeComplete = (color, event) => setSelected(color.hex);
 
   return (
