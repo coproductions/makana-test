@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Loading from './Loading';
-import { useAuthMutation } from '../hooks/useAuthMutation';
+import { useAuthMutation } from '../hooks';
 import { LOGIN_USER, SIGN_UP } from '../operations';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 
@@ -39,8 +39,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SignIn = ({ isSignUp, history }) => {
-  const [values, setValues] = useState({ email: '', password: '', name: 'tom' });
+export const SignIn = ({ isSignUp, history }) => {
+  const [values, setValues] = useState({ email: '', password: '', name: '' });
   const classes = useStyles();
   const mutation = isSignUp ? SIGN_UP : LOGIN_USER;
   const navigate = () => history.push('/');
@@ -61,7 +61,7 @@ const SignIn = ({ isSignUp, history }) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          {callToAction}
+          {callToAction.toUpperCase()}
         </Typography>
         <form
           className={classes.form}
@@ -93,7 +93,7 @@ const SignIn = ({ isSignUp, history }) => {
             onChange={handleChange('email')}
             fullWidth
             id="email"
-            label="Email Address"
+            label="email"
             name="email"
             autoFocus
             autoComplete="email"
@@ -106,7 +106,7 @@ const SignIn = ({ isSignUp, history }) => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="password"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -116,7 +116,9 @@ const SignIn = ({ isSignUp, history }) => {
           ) : (
             <Button
               type="submit"
+              label="submit"
               fullWidth
+              id="submit"
               variant="contained"
               color="primary"
               disabled={!values.email || !values.password}
